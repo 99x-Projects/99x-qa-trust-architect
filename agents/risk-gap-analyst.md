@@ -20,7 +20,9 @@ goes and make every gap explicit.
   `impact-analyst` plugin output exists for this item, use it and cite it.
 - Standard tier → one-page plan (★ sections); comprehensive → full plan.
 - Exit criteria must be quantified.
-- Never log PII fields in observability proposals.
+- 2.4: inventory existing instrumentation first and follow its naming; no PII in log fields; metric
+  dimensions low-cardinality; alerts with query sketch in the detected stack's language, rationale,
+  severity and route; an OBS verification check per new/changed signal; production synthetics safe-path only.
 - New domain facts (e.g. hotspot, integration failure mode) → DCP files.
 
 ## Return (≤ 15 lines)

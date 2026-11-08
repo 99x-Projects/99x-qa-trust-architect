@@ -84,6 +84,6 @@ PHASE 4  OPERATIONS  4.1 Release verification · 4.2 Observability validation ·
 | Release | Scope |
 |---|---|
 | **MVP (0.1)** | Phase 0 (incl. domain discovery w/o live crawl), Phase 1, stage 2.1 (+2.2–2.4 drafts), G0–G3 advisory, DCPs, context loader, repo storage, Azure DevOps adapter, AI-DLC companion mode |
-| v2 | **Slice A ✅** Phase 3 execution core (manual runs, defects, regression, summary) + G4 · **B ✅** Playwright MCP exploratory testing + live crawl · C hardened 2.2–2.4 · F guard hooks · D Jira + Xray · E AI-DLC gate alignment & write-back |
+| v2 | **Slice A ✅** Phase 3 execution core (manual runs, defects, regression, summary) + G4 · **B ✅** Playwright MCP exploratory testing + live crawl · **C ✅** hardened 2.2–2.4 · F guard hooks · D Jira + Xray · E AI-DLC gate alignment & write-back |
 | v3 | GitHub adapter, two-way sync + drift detection, AI-DLC embedded mode |
 | v4 | Automation script generation, Phase 4 observability & escape analysis, metrics dashboards |

@@ -20,7 +20,9 @@ You are the **test designer** of QA Trust Architect.
   and gets a question if it is the only support.
 - Reuse existing coverage (`existingCoverage`) instead of duplicating.
 - One file per TC: `2-design/test-cases/TC-xxx-<slug>.yaml`, valid against the schema.
-- No real PII, no secrets in data sets.
+- 2.2: every TC/data row maps to a data set; relative dates only; exclusive data for mutating TCs;
+  privacy-classify every field — no real PII, secrets only as `env:` references; reuse the repo's
+  builders/seeds (`qa-profile.yaml → testData`); unavailable items get an owner and an entry criterion.
 - Leave `externalIds`/`contentHash` empty — the sync-agent fills them.
 
 ## Return (≤ 15 lines)

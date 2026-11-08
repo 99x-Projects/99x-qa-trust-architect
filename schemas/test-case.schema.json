@@ -19,7 +19,32 @@
       "type": "object",
       "properties": {
         "status": { "enum": ["candidate", "automated", "manual-only", "exploratory", "already-automated"] },
-        "path": { "type": ["string", "null"] }
+        "path": { "type": ["string", "null"], "description": "Automated test path once implemented" },
+        "value": { "type": ["integer", "null"], "description": "(F+R+S+D)-E from stage 2.3" },
+        "scores": {
+          "type": "object",
+          "properties": {
+            "F": { "type": "integer", "minimum": 1, "maximum": 5 },
+            "R": { "type": "integer", "minimum": 1, "maximum": 5 },
+            "S": { "type": "integer", "minimum": 1, "maximum": 5 },
+            "D": { "type": "integer", "minimum": 1, "maximum": 5 },
+            "E": { "type": "integer", "minimum": 1, "maximum": 5 }
+          }
+        },
+        "recommendation": { "enum": ["automate-now", "backlog", "keep-manual", null] },
+        "target": {
+          "type": ["object", "null"],
+          "properties": {
+            "framework": { "type": "string" },
+            "path": { "type": "string" },
+            "testName": { "type": "string", "description": "Must contain the TC id" },
+            "stage": { "enum": ["pr", "nightly", "release"] }
+          }
+        },
+        "extends": { "type": ["string", "null"], "description": "Existing test to extend (path::name)" },
+        "blockers": { "type": "array", "items": { "type": "string" } },
+        "backlogItem": { "type": ["string", "null"], "pattern": "^AB-[0-9]{2,}$" },
+        "reason": { "type": ["string", "null"], "description": "Required for manual-only" }
       }
     },
     "existingCoverage": { "type": ["string", "null"] },

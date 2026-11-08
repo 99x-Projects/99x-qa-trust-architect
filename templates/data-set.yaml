@@ -1,0 +1,29 @@
+# Machine-readable data set (optional) — 2-design/data-sets/DS-01.yaml
+# Consumed by testers, automation builders and (v4) generated automation. No secrets, no real PII.
+id: DS-01
+purpose: "Employee at the per-request leave limit"
+sharing: exclusive                 # shared | exclusive
+creation:
+  method: api                      # factory | api | fixture | synthetic | ui | db | masked-copy
+  how: "LeaveBuilder.Employee().WithBalance(25).Create() — tests/Builders/LeaveBuilder.cs"
+  when: per-test                   # pre-cycle | per-suite | per-test
+cleanup: "Cancel created requests; employee is reused"
+uniquePrefix: "QA-{{workItemKey}}-"
+records:
+  - entity: ENT-employee
+    values:
+      name: "{{faker:name}}"
+      email: "qa.employee.{{n}}@example.com"
+      leaveBalanceDays: 25
+    role: ROLE-employee
+    account: "env:TEST_EMPLOYEE_USER"
+  - entity: ENT-leave-request
+    values:
+      startDate: "{{nextWorkingDay}}"
+      days: [20, 21]               # one record per value
+    state: Draft
+privacy:
+  employee.email: personal
+  employee.name: personal
+usedBy: [TC-001, TC-002]
+environments: [test]

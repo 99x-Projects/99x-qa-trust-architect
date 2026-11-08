@@ -9,6 +9,15 @@ level: api                      # unit | api | ui | contract | manual | explorat
 automation:
   status: candidate             # candidate | automated | manual-only | exploratory | already-automated
   path: null                    # automation script path when automated
+  # filled by stage 2.3:
+  value: null                   # (F+R+S+D)-E
+  scores: {}                    # { F: 5, R: 5, S: 4, D: 5, E: 2 }
+  recommendation: null          # automate-now | backlog | keep-manual
+  target: null                  # { framework: xunit, path: tests/Api/LeaveTests.cs, testName: TC-001_rejects_21_days, stage: pr }
+  extends: null                 # existing test to extend (path::name)
+  blockers: []
+  backlogItem: null             # AB-01
+  reason: null                  # required for manual-only
 existingCoverage: null          # path of an existing test that already covers this
 basis: confirmed                # confirmed | provisional
 basisRefs: []                   # e.g. [DCP-0007] when provisional

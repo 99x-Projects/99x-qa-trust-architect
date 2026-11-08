@@ -61,9 +61,9 @@ project paths are relative to the project root.
 | | 1.6 Test strategy & plan | `.../1.6-test-strategy-plan.md` | `1-inception/test-plan.md` | MVP |
 | | **G2 Test Plan Approved** | `gates/G2-test-plan-approved.md` | `gates/G2.md` | MVP |
 | 2 Design | 2.1 Test case design | `rules/phase-2-design/2.1-test-case-design.md` | `2-design/test-cases/*.yaml` | MVP |
-| | 2.2 Test data & env | `.../2.2-test-data-environment.md` | `2-design/test-data.md` | MVP (draft) |
-| | 2.3 Automation gap | `.../2.3-automation-gap.md` | `2-design/automation-gap.md` | MVP (draft) |
-| | 2.4 Observability design | `.../2.4-observability-design.md` | `2-design/observability-plan.md` | MVP (draft) |
+| | 2.2 Test data & env | `.../2.2-test-data-environment.md` | `2-design/test-data.md`, `2-design/data-sets/` | v2 |
+| | 2.3 Automation gap | `.../2.3-automation-gap.md` | `2-design/automation-gap.md` | v2 |
+| | 2.4 Observability design | `.../2.4-observability-design.md` | `2-design/observability-plan.md` | v2 |
 | | **G3 Test Design Approved** | `gates/G3-test-design-approved.md` | `gates/G3.md` | MVP |
 | 3 Execution | 3.1 Automation implementation | `rules/phase-3-execution/3.1-automation-implementation.md` | – (non-blocking stub) | v4 |
 | | 3.2a Manual execution | `.../3.2a-manual-execution.md` | `3-execution/runs/RUN-*.yaml`, `execution-log.md` | v2 |
@@ -127,7 +127,11 @@ When the user says questions are answered (or on `/qa-continue`):
 | Execution cycle | `CY-01` | per work item |
 | Test run | `RUN-001` | per work item (`3-execution/runs/`) |
 | Defect | `DEF-001` | per work item (`3-execution/defects/`); platform ID in `externalIds`, tag `qa-def:<workItemKey>/DEF-001` |
-| Data set | `DS-01` | per work item |
+| Data set | `DS-01` | per work item (`2-design/test-data.md`, `data-sets/`) |
+| Automation backlog item | `AB-01` | per work item (`automation-gap.md`) |
+| Dev ask (testability / instrumentation) | `DA-01` | per work item (shared by 2.3 and 2.4) |
+| Signal | `SIG-01` | per work item (`observability-plan.md`) |
+| Observability check | `OBS-01` | per work item; executed in 3.2a as `testRef` |
 | Business rule | `BR-001` | project (domain) |
 | Journey | `J-01` | project (domain) |
 | Persona / role | `ROLE-<slug>` | project (domain) |

@@ -27,6 +27,13 @@ platform:
   confirmed: false
 environments: [dev, test, staging, prod]
 observability: [application-insights]
+observabilityConventions: { logging: "Microsoft.Extensions.Logging", eventNames: PascalCase, metricPrefix: "leave." }
+testData:
+  builders: ["tests/Builders/**"]      # factories / builders / fakers
+  seeds: ["db/seed/**"]
+  fixtures: ["tests/fixtures/**"]
+  apis: []                               # test-data / reset endpoints
+reporters: { xunit: trx, playwright: junit }   # result formats importable in 3.4
 integrations:
   aidlc:
     detected: false

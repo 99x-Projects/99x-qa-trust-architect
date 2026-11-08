@@ -9,6 +9,13 @@ level: api
 automation:
   status: candidate
   path: null
+  value: null                   # filled by stage 2.3 (see test-case.gherkin.yaml for all fields)
+  recommendation: null
+  target: null
+  extends: null
+  blockers: []
+  backlogItem: null
+  reason: null
 existingCoverage: null
 basis: provisional
 basisRefs: [DCP-0009]

@@ -24,7 +24,7 @@ process. It runs at the end of stage 1.1 and writes the decision to `qa-state.md
 | 1.6 Test plan | – | lite (one-page) | ✔ (full) |
 | **G2** | – | ✔ | ✔ (PO recommended) |
 | 2.1 Test cases | ✔ | ✔ | ✔ |
-| 2.2 Data & env | – | if needed | ✔ |
+| 2.2 Data & env | – | if needed (criteria in the 2.2 rule header) | ✔ |
 | 2.3 Automation gap | – | ✔ | ✔ |
 | 2.4 Observability | – | if user-facing or integration | ✔ |
 | **G3** | ✔ | ✔ | ✔ |
