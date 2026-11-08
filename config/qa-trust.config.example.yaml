@@ -1,0 +1,120 @@
+# qa-trust.config.yaml — place at the root of the project under test.
+# Validated by schemas/qa-trust.config.schema.json. All paths are relative to the project root.
+
+version: 1
+
+project:
+  name: "My Project"
+  type: auto                      # auto | greenfield | brownfield
+
+# ─── Where artifacts live ───────────────────────────────────────────────
+storage:
+  repo:
+    enabled: true
+    path: "docs/qa"               # any folder
+    layout: "{workItemKey}/"      # e.g. "{epic}/{workItemKey}/" or "{intent}/{unit}/" (AI-DLC)
+  platform:
+    enabled: true
+    target: azure-devops          # azure-devops (MVP) | jira-xray (v2) | github (v3)
+  sourceOfTruth: repo             # repo | platform
+  syncMode: on-gate               # on-gate | on-demand | manual
+
+# ─── Secrets ────────────────────────────────────────────────────────────
+# Secrets (PATs, tokens, test account passwords) live ONLY in the env file, never here.
+# Template: config/.env.example in the plugin. Shell/OS environment variables win over the file.
+secrets:
+  envFile: ".env"                 # relative to project root; must be gitignored
+
+# ─── Work item platform connection ──────────────────────────────────────
+platform:
+  azure-devops:
+    organization: "https://dev.azure.com/your-org"
+    project: "YourProject"
+    testPlanId: null              # existing Test Plan to add suites/cases to (null = create per work item)
+    workItemKeyPrefix: "ADO"      # folder key → ADO-1234
+    gateStatusField: tag          # tag | custom-field
+    customFieldRef: null          # e.g. "Custom.QAGate" when gateStatusField = custom-field
+  # jira-xray: { site, projectKey, xrayDeployment: cloud|server, ... }   # v2
+  # github:    { owner, repo }                                            # v3
+
+# ─── Gates ──────────────────────────────────────────────────────────────
+gates:
+  mode: advisory                  # advisory | blocking (per-gate override below)
+  perGate: {}                     # e.g. { G4: blocking }
+  approvers:
+    default: any-tester
+    overrides: {}                 # e.g. { G4: ["qa-lead"] }
+  team:
+    testers: ["*"]                # or explicit list of names/emails
+
+# ─── Acceptance criteria ────────────────────────────────────────────────
+acceptanceCriteria:
+  formats: [gherkin, rule-table]  # both allowed, chosen per criterion
+  pushToPlatform: true            # write approved AC back to the work item at G1
+
+# ─── Routing / tiers ────────────────────────────────────────────────────
+routing:
+  defaultTier: standard
+  rules:
+    - when: { type: [Bug, Hotfix] }
+      tier: light
+    - when: { type: [Epic, Feature] }
+      tier: comprehensive
+    - when: { labels: [payments, pii, compliance, security] }
+      tier: comprehensive
+
+# ─── Domain context ─────────────────────────────────────────────────────
+domain:
+  path: "docs/qa/_project/domain"
+  discovery:
+    mode: auto                    # auto | docs-led | evidence-led
+    depth:
+      skeleton: all-features
+      deep: [top-risk, top-usage]
+      lazy: true                  # deepen a feature on its first work item
+    sources:
+      docs: ["docs/**/*.md", "requirements/**"]
+      tests: true
+      code: true
+      dataModel: true
+      trackerHistory: { lookbackMonths: 12 }
+      liveApp: false              # v2 (Playwright crawl)
+    corroboration:
+      highConfidence: 2           # independent sources needed for "high"
+  proposals:
+    autoAccept: [app-map.pages, app-map.screenshots, feature-map.codeLinks, typo]
+    review:     [glossary, journeys, entities, known-quirks, integrations, personas]
+    critical:   [business-rules, personas-roles.permissions, entities.states]
+    staleAfterDays: 7
+  owners: {}                      # e.g. { business-rules: ["product-owner"] }; default any tester
+  provisionalFacts:
+    usableByAgents: true
+    canFailTests: false
+  notifyPlatform: comment         # none | comment | work-item
+
+# ─── Other SDLC workflows ───────────────────────────────────────────────
+integrations:
+  aidlc:
+    enabled: auto                 # auto | true | false
+    mode: companion               # companion (MVP) | embedded (v3)
+    docsPath: "aidlc-docs"
+    keyBy: unit                   # unit | workItem
+    unitToWorkItem: from-tracker
+    writeBack:
+      questions: false            # v2
+      auditEntries: false
+    gateAlignment: false          # v2
+    domainSync: dcp
+
+# ─── Execution (v2) ─────────────────────────────────────────────────────
+exploratory:
+  mcp: playwright
+  environments:
+    allowed: [dev, test, staging]
+  auth:
+    storageStatePath: ".auth/{env}.json"
+    credentialsFromEnv: true
+  guards:
+    blockActions: ["delete", "pay", "send email"]
+    maxSessionMinutes: 30
+  defectCreation: confirm

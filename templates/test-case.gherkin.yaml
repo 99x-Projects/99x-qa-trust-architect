@@ -1,0 +1,37 @@
+# Test case — Gherkin format. Schema: schemas/test-case.schema.json
+id: TC-001
+title: "Reject leave request longer than 20 days"
+format: gherkin
+objective: "Verify the per-request leave limit (upper boundary + 1)"
+priority: 1                     # 1 (highest) – 4
+technique: [boundary-value]
+level: api                      # unit | api | ui | contract | manual | exploratory
+automation:
+  status: candidate             # candidate | automated | manual-only | exploratory | already-automated
+  path: null                    # automation script path when automated
+existingCoverage: null          # path of an existing test that already covers this
+basis: confirmed                # confirmed | provisional
+basisRefs: []                   # e.g. [DCP-0007] when provisional
+traces:
+  requirements: [REQ-01]
+  acceptanceCriteria: [AC-03]
+  rules: [BR-012]
+  risks: [R-01]
+  features: [F-leave-request]
+  roles: [ROLE-employee]
+dataSets: [DS-01]
+preconditions:
+  - "Employee has a leave balance of 25 days"
+gherkin: |
+  Scenario Outline: Leave request over the per-request limit is rejected
+    Given an employee with a leave balance of 25 days
+    When they request <days> consecutive days of leave
+    Then the request is <result>
+
+    Examples:
+      | days | result   |
+      | 20   | accepted |
+      | 21   | rejected with "Leave cannot exceed 20 days per request" |
+externalIds: {}                 # filled by sync: { azure-devops: 8812 }
+contentHash: null               # filled by sync
+status: draft                   # draft | approved | needs-review | obsolete

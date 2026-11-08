@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "qa-trust-architect/qa-trust.config.schema.json",
+  "title": "QA Trust Architect project configuration",
+  "type": "object",
+  "required": ["version", "storage", "gates"],
+  "properties": {
+    "version": { "const": 1 },
+    "project": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "enum": ["auto", "greenfield", "brownfield"] }
+      }
+    },
+    "storage": {
+      "type": "object",
+      "required": ["repo", "platform", "sourceOfTruth"],
+      "properties": {
+        "repo": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "path": { "type": "string", "default": "docs/qa" },
+            "layout": { "type": "string", "default": "{workItemKey}/" }
+          }
+        },
+        "platform": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "target": { "enum": ["azure-devops", "jira-xray", "github"] }
+          }
+        },
+        "sourceOfTruth": { "enum": ["repo", "platform"] },
+        "syncMode": { "enum": ["on-gate", "on-demand", "manual"] }
+      },
+      "anyOf": [
+        { "properties": { "repo": { "properties": { "enabled": { "const": true } } } } },
+        { "properties": { "platform": { "properties": { "enabled": { "const": true } } } } }
+      ]
+    },
+    "secrets": {
+      "type": "object",
+      "properties": {
+        "envFile": { "type": "string", "default": ".env" }
+      }
+    },
+    "platform": { "type": "object" },
+    "gates": {
+      "type": "object",
+      "properties": {
+        "mode": { "enum": ["advisory", "blocking"] },
+        "perGate": {
+          "type": "object",
+          "propertyNames": { "pattern": "^G[0-5]$" },
+          "additionalProperties": { "enum": ["advisory", "blocking"] }
+        },
+        "approvers": {
+          "type": "object",
+          "properties": {
+            "default": { "type": "string" },
+            "overrides": {
+              "type": "object",
+              "propertyNames": { "pattern": "^G[0-5]$" },
+              "additionalProperties": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "team": {
+          "type": "object",
+          "properties": { "testers": { "type": "array", "items": { "type": "string" } } }
+        }
+      }
+    },
+    "acceptanceCriteria": {
+      "type": "object",
+      "properties": {
+        "formats": { "type": "array", "items": { "enum": ["gherkin", "rule-table"] }, "minItems": 1 },
+        "pushToPlatform": { "type": "boolean" }
+      }
+    },
+    "routing": {
+      "type": "object",
+      "properties": {
+        "defaultTier": { "enum": ["light", "standard", "comprehensive"] },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["when", "tier"],
+            "properties": {
+              "when": { "type": "object" },
+              "tier": { "enum": ["light", "standard", "comprehensive"] }
+            }
+          }
+        }
+      }
+    },
+    "domain": {
+      "type": "object",
+      "properties": {
+        "path": { "type": "string" },
+        "discovery": {
+          "type": "object",
+          "properties": {
+            "mode": { "enum": ["auto", "docs-led", "evidence-led"] },
+            "depth": { "type": "object" },
+            "sources": { "type": "object" },
+            "corroboration": {
+              "type": "object",
+              "properties": { "highConfidence": { "type": "integer", "minimum": 1 } }
+            }
+          }
+        },
+        "proposals": {
+          "type": "object",
+          "properties": {
+            "autoAccept": { "type": "array", "items": { "type": "string" } },
+            "review": { "type": "array", "items": { "type": "string" } },
+            "critical": { "type": "array", "items": { "type": "string" } },
+            "staleAfterDays": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "owners": { "type": "object" },
+        "provisionalFacts": {
+          "type": "object",
+          "properties": {
+            "usableByAgents": { "type": "boolean" },
+            "canFailTests": { "type": "boolean" }
+          }
+        },
+        "notifyPlatform": { "enum": ["none", "comment", "work-item"] }
+      }
+    },
+    "integrations": {
+      "type": "object",
+      "properties": {
+        "aidlc": {
+          "type": "object",
+          "properties": {
+            "enabled": { "enum": ["auto", true, false] },
+            "mode": { "enum": ["companion", "embedded"] },
+            "docsPath": { "type": "string" },
+            "keyBy": { "enum": ["unit", "workItem"] },
+            "unitToWorkItem": { "type": "string" },
+            "writeBack": { "type": "object" },
+            "gateAlignment": { "type": "boolean" },
+            "domainSync": { "enum": ["dcp", "none"] }
+          }
+        }
+      }
+    },
+    "exploratory": { "type": "object" }
+  }
+}

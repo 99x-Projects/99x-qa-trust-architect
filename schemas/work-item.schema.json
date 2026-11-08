@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "qa-trust-architect/work-item.schema.json",
+  "title": "Canonical work item (platform-neutral)",
+  "type": "object",
+  "required": ["key", "platform", "platformId", "type", "title"],
+  "properties": {
+    "key": { "type": "string", "description": "Folder/display key, e.g. ADO-1234, PROJ-45, GH-88" },
+    "platform": { "enum": ["azure-devops", "jira-xray", "github", "aidlc"] },
+    "platformId": { "type": "string" },
+    "url": { "type": "string" },
+    "type": { "type": "string", "description": "Normalised: Epic | Feature | Story | Bug | Task | Hotfix | Other" },
+    "platformType": { "type": "string", "description": "Original type name, e.g. 'Product Backlog Item'" },
+    "title": { "type": "string" },
+    "description": { "type": "string", "description": "Markdown" },
+    "acceptanceCriteria": { "type": "string", "description": "Markdown, as stored on the platform" },
+    "state": { "type": "string" },
+    "priority": { "type": ["string", "number", "null"] },
+    "estimate": { "type": ["number", "null"] },
+    "labels": { "type": "array", "items": { "type": "string" } },
+    "areaPath": { "type": ["string", "null"] },
+    "iteration": { "type": ["string", "null"] },
+    "assignee": { "type": ["string", "null"] },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["relation", "target"],
+        "properties": {
+          "relation": { "enum": ["parent", "child", "related", "tested-by", "tests", "duplicate", "pull-request", "commit", "other"] },
+          "target": { "type": "string" },
+          "title": { "type": "string" }
+        }
+      }
+    },
+    "customFields": { "type": "object" },
+    "aidlcRefs": { "type": "array", "items": { "type": "string" } }
+  }
+}

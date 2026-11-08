@@ -1,0 +1,10 @@
+{
+  "name": "qa-trust-architect",
+  "version": "0.1.0",
+  "description": "Gated, AI-assisted QA lifecycle (requirements analysis, acceptance criteria, risk & gap analysis, test planning, test design, automation gaps, execution, observability) with a shared domain context. Platform-agnostic (Azure DevOps, Jira/Xray, GitHub) and AI-DLC compatible.",
+  "author": {
+    "name": "99x QA",
+    "email": "chamalp@99x.io"
+  },
+  "keywords": ["qa", "testing", "test-plan", "acceptance-criteria", "gap-analysis", "aidlc", "azure-devops", "xray"]
+}

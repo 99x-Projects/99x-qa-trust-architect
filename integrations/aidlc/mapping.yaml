@@ -1,0 +1,69 @@
+# AI-DLC artifact → QA Trust Architect input mapping.
+# Paths are globs relative to integrations.aidlc.docsPath (default "aidlc-docs").
+# Several patterns per entry tolerate AI-DLC layout differences across versions;
+# the first matching pattern wins. Update this file (not code) when AI-DLC changes.
+mappingVersion: 1
+testedAgainst: "AI-DLC workflows (aidlc-docs layout), 2025–2026"
+
+state:
+  patterns: ["aidlc-state.md"]
+audit:
+  patterns: ["audit.md"]
+
+artifacts:
+  reverseEngineering:
+    patterns: ["inception/reverse-engineering/**/*.md", "reverse-engineering/**/*.md"]
+    feeds: ["0.2:docs", "slice:overview", "slice:features", "slice:integrations"]
+
+  businessOverview:
+    patterns: ["inception/reverse-engineering/business-overview.md", "**/business-overview.md"]
+    feeds: ["slice:overview", "slice:glossary"]
+
+  requirements:
+    patterns: ["inception/requirements/**/*.md", "inception/requirements*.md", "requirements/**/*.md"]
+    feeds: ["1.1:requirements", "0.2:docs"]
+
+  userStories:
+    patterns: ["inception/user-stories/**/stories*.md", "inception/user-stories/**/*.md", "user-stories/**/*.md"]
+    feeds: ["1.1:existing-ac", "1.3:existing-ac"]
+
+  personas:
+    patterns: ["inception/user-stories/**/personas*.md", "**/personas*.md"]
+    feeds: ["slice:roles"]
+
+  applicationDesign:
+    patterns: ["inception/application-design/**/*.md", "application-design/**/*.md"]
+    feeds: ["slice:features", "slice:integrations"]
+
+  unitsOfWork:
+    patterns: ["inception/units*/**/*.md", "inception/application-design/unit-of-work*.md", "**/unit-of-work*.md"]
+    feeds: ["keying:units", "slice:features"]
+
+  functionalDesign:
+    patterns: ["construction/*/functional-design/**/*.md", "construction/**/functional-design*.md"]
+    feeds: ["slice:rules", "slice:entities", "1.2:context"]
+    perUnit: true
+
+  nfrRequirements:
+    patterns: ["construction/*/nfr-requirements/**/*.md", "construction/**/nfr-requirements*.md"]
+    feeds: ["slice:nfr", "1.2:nfr", "2.4:context"]
+    perUnit: true
+
+  nfrDesign:
+    patterns: ["construction/*/nfr-design/**/*.md"]
+    feeds: ["2.4:context"]
+    perUnit: true
+
+  infrastructureDesign:
+    patterns: ["construction/*/infrastructure-design/**/*.md"]
+    feeds: ["slice:environments", "2.2:context"]
+    perUnit: true
+
+  buildAndTest:
+    patterns: ["construction/build-and-test/**/*.md", "construction/*/build-and-test/**/*.md"]
+    feeds: ["0.3:existing-tests", "2.3:existing-automation"]
+
+# Unit identification (keyBy: unit)
+units:
+  idFrom: "folder name under construction/"   # e.g. construction/leave-service/ → unit "leave-service"
+  intentFrom: "aidlc-state.md project/intent title"

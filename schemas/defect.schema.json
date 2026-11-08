@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "qa-trust-architect/defect.schema.json",
+  "title": "Defect (canonical, v2)",
+  "type": "object",
+  "required": ["title", "stepsToReproduce", "expected", "actual", "severity"],
+  "properties": {
+    "title": { "type": "string" },
+    "stepsToReproduce": { "type": "array", "items": { "type": "string" } },
+    "expected": { "type": "string" },
+    "actual": { "type": "string" },
+    "severity": { "enum": ["Sev1", "Sev2", "Sev3", "Sev4"] },
+    "priority": { "type": ["string", "integer", "null"] },
+    "environment": { "type": "string" },
+    "build": { "type": "string" },
+    "evidence": { "type": "array", "items": { "type": "string" } },
+    "traces": {
+      "type": "object",
+      "properties": {
+        "workItem": { "type": "string" },
+        "testCases": { "type": "array", "items": { "type": "string" } },
+        "acceptanceCriteria": { "type": "array", "items": { "type": "string" } },
+        "rules": { "type": "array", "items": { "type": "string" } },
+        "session": { "type": "string" }
+      }
+    },
+    "oracleBasis": {
+      "enum": ["confirmed", "documented-verified"],
+      "description": "Defects may only be raised against oracle-eligible facts"
+    },
+    "confirmedBy": { "type": "string", "description": "Tester who confirmed creation" },
+    "externalIds": { "type": "object" }
+  }
+}

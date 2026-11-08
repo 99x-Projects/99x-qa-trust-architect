@@ -1,0 +1,21 @@
+features:
+  - id: F-leave-request
+    name: "Leave request"
+    description: "{{what users can do}}"
+    depth: skeleton                  # skeleton | deep
+    discoveryMode: evidence-led      # docs-led | evidence-led
+    keywords: [leave, absence, time off]
+    codePaths: ["src/Leave/**"]
+    routes: ["/leave", "/leave/new"]
+    apis: ["POST /api/leave", "GET /api/leave/{id}"]
+    entities: [ENT-leave-request]
+    rules: [BR-012, BR-015]
+    journeys: [J-04]
+    roles: [ROLE-employee, ROLE-manager]
+    integrations: [INT-email]
+    dependsOn: [F-notifications]
+    tests:                            # mirror of feature-test-map summary
+      ref: "_project/feature-test-map.yaml#F-leave-request"
+    workItemLinks: []                 # epics/features on the platform
+    aidlcRefs: []                     # e.g. aidlc:inception/application-design/... (companion mode)
+    lastVerified: "{{isoDate}}"

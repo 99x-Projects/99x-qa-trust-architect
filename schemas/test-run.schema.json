@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "qa-trust-architect/test-run.schema.json",
+  "title": "Test run result (v2)",
+  "type": "object",
+  "required": ["id", "caseId", "result", "executedAt"],
+  "properties": {
+    "id": { "type": "string" },
+    "caseId": { "type": "string", "pattern": "^TC-[0-9]{3,}$" },
+    "result": { "enum": ["passed", "failed", "blocked", "skipped", "not-run"] },
+    "executedBy": { "type": "string" },
+    "executedAt": { "type": "string", "format": "date-time" },
+    "environment": { "type": "string" },
+    "build": { "type": "string" },
+    "mode": { "enum": ["manual", "automated", "exploratory"] },
+    "evidence": { "type": "array", "items": { "type": "string" } },
+    "defects": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "string" },
+    "externalIds": { "type": "object" }
+  }
+}

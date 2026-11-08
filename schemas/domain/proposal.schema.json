@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "qa-trust-architect/domain/proposal.schema.json",
+  "title": "Domain Change Proposal (front-matter of _proposals/DCP-*.md)",
+  "type": "object",
+  "required": ["id", "title", "status", "level", "change", "targetFile", "raisedBy", "raisedAt", "origin"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^DCP-[0-9]{4,}$" },
+    "title": { "type": "string" },
+    "status": { "enum": ["pending", "accepted", "rejected", "deferred", "superseded"] },
+    "level": { "enum": ["auto", "review", "critical"] },
+    "change": { "enum": ["add", "modify", "remove"] },
+    "targetFile": { "type": "string" },
+    "targetFactId": { "type": ["string", "null"] },
+    "raisedBy": { "type": "string" },
+    "raisedAt": { "type": "string", "format": "date-time" },
+    "origin": { "type": "string" },
+    "confidence": { "enum": ["high", "medium", "low"] },
+    "supersedes": { "type": ["string", "null"] },
+    "conflictsWith": { "type": "array", "items": { "type": "string" } },
+    "decidedBy": { "type": ["string", "null"] },
+    "decidedAt": { "type": ["string", "null"] },
+    "decisionReason": { "type": ["string", "null"] }
+  }
+}

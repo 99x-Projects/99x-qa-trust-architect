@@ -1,0 +1,13 @@
+# v2 — placeholder
+platform: jira-xray
+workItemType:
+  Epic: Epic
+  Story: Story
+  Bug: Bug
+  Task: Task
+testCase:
+  gherkin: { issueType: Test, testType: Cucumber }
+  rule-table: { issueType: Test, testType: Manual }
+  automated: { issueType: Test, testType: Generic }
+gateStatus:
+  labelPrefix: "qa-gate:"

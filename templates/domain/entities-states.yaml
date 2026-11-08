@@ -1,0 +1,24 @@
+entities:
+  - id: ENT-leave-request
+    name: "Leave request"
+    attributes:
+      - { name: startDate, type: date, required: true }
+      - { name: endDate, type: date, required: true, rule: "endDate >= startDate (schema CHECK)" }
+      - { name: status, type: enum }
+    relationships:
+      - { to: ENT-employee, kind: many-to-one }
+    states:
+      initial: Draft
+      values: [Draft, Submitted, Approved, Rejected, Cancelled]
+      transitions:
+        - { from: Draft, to: Submitted, by: ROLE-employee, action: submit }
+        - { from: Submitted, to: Approved, by: ROLE-manager, action: approve, rules: [BR-020] }
+        - { from: Submitted, to: Rejected, by: ROLE-manager, action: reject }
+        - { from: [Draft, Submitted], to: Cancelled, by: ROLE-employee, action: cancel }
+      invalidTransitionsToTest:
+        - { from: Approved, to: Submitted }
+    status: observed
+    confidence: medium
+    sources:
+      - { type: code, ref: "src/Leave/LeaveRequest.cs#Status", hash: null }
+    lastVerified: "{{isoDate}}"

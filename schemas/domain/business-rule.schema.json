@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "qa-trust-architect/domain/business-rule.schema.json",
+  "title": "Business rule",
+  "allOf": [{ "$ref": "fact.schema.json" }],
+  "type": "object",
+  "required": ["id", "statement", "features", "kind", "level"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^BR-[0-9]{3,}$" },
+    "statement": { "type": "string" },
+    "features": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "entities": { "type": "array", "items": { "type": "string" } },
+    "kind": { "enum": ["limit", "validation", "calculation", "permission", "workflow", "policy"] },
+    "level": { "enum": ["auto", "review", "critical"] },
+    "discrepancy": { "type": ["string", "null"] },
+    "question": { "type": ["string", "null"] }
+  }
+}

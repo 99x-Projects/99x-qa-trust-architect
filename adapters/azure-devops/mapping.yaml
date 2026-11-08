@@ -1,0 +1,63 @@
+platform: azure-devops
+keyPrefix: "ADO"                   # overridden by platform.azure-devops.workItemKeyPrefix
+
+workItemType:                     # ADO type → canonical type
+  Epic: Epic
+  Feature: Feature
+  User Story: Story
+  Product Backlog Item: Story
+  Requirement: Story
+  Bug: Bug
+  Task: Task
+  Issue: Other
+
+workItem:
+  platformId: id
+  url: _links.html.href
+  title: fields."System.Title"
+  description: fields."System.Description"                      # HTML → Markdown
+  acceptanceCriteria: fields."Microsoft.VSTS.Common.AcceptanceCriteria"
+  state: fields."System.State"
+  priority: fields."Microsoft.VSTS.Common.Priority"
+  estimate: [fields."Microsoft.VSTS.Scheduling.StoryPoints", fields."Microsoft.VSTS.Scheduling.Effort"]
+  labels: fields."System.Tags"                                  # split on "; "
+  areaPath: fields."System.AreaPath"
+  iteration: fields."System.IterationPath"
+  assignee: fields."System.AssignedTo".displayName
+  bugExpected: fields."Microsoft.VSTS.TCM.ReproSteps"           # used by evidence-led discovery
+
+relations:
+  System.LinkTypes.Hierarchy-Reverse: parent
+  System.LinkTypes.Hierarchy-Forward: child
+  System.LinkTypes.Related: related
+  Microsoft.VSTS.Common.TestedBy-Forward: tested-by
+  Microsoft.VSTS.Common.TestedBy-Reverse: tests
+  System.LinkTypes.Duplicate-Forward: duplicate
+  ArtifactLink: pull-request       # check attributes.name == "Pull Request" / "Fixed in Commit"
+
+testCase:
+  type: "Test Case"
+  fields:
+    title: System.Title
+    priority: Microsoft.VSTS.Common.Priority        # canonical 1–4 → ADO 1–4
+    steps: Microsoft.VSTS.TCM.Steps                 # XML, built by helper script
+    description: System.Description
+    tags: System.Tags
+    automationStatus: Microsoft.VSTS.TCM.AutomationStatus   # "Not Automated" | "Planned" | "Automated"
+  automationStatusMap:
+    candidate: Planned
+    automated: Automated
+    already-automated: Automated
+    manual-only: Not Automated
+    exploratory: Not Automated
+  linkToRequirement: Microsoft.VSTS.Common.TestedBy-Reverse
+
+gateStatus:
+  tagPrefix: "qa-gate:"            # qa-gate:G2-approved
+  values: [approved, approved-with-risks, rejected, overridden, stale]
+
+severity:                          # canonical → Microsoft.VSTS.Common.Severity
+  Sev1: "1 - Critical"
+  Sev2: "2 - High"
+  Sev3: "3 - Medium"
+  Sev4: "4 - Low"

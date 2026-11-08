@@ -1,0 +1,16 @@
+# App map — mostly filled by the v2 live crawl (Playwright MCP); MVP seeds it from route config.
+baseUrls:
+  test: "{{https://test.example.com}}"
+pages:
+  - id: PAGE-leave-new
+    path: "/leave/new"
+    title: "New leave request"
+    features: [F-leave-request]
+    roles: [ROLE-employee, ROLE-manager]
+    navigation: ["Home > Leave > New"]
+    keyElements:
+      - { name: "Start date", role: textbox }
+      - { name: "Submit", role: button }
+    screenshots: []                 # app-map/screenshots/<page>-<role>.png
+    source: route-config           # route-config | crawl | manual
+    lastVerified: "{{isoDate}}"

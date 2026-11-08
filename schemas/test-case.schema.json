@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "qa-trust-architect/test-case.schema.json",
+  "title": "Test case (repo canonical form)",
+  "type": "object",
+  "required": ["id", "title", "format", "priority", "level", "basis", "traces", "status"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^TC-[0-9]{3,}$" },
+    "title": { "type": "string" },
+    "format": { "enum": ["gherkin", "rule-table"] },
+    "objective": { "type": "string" },
+    "priority": { "type": "integer", "minimum": 1, "maximum": 4 },
+    "technique": {
+      "type": "array",
+      "items": { "enum": ["equivalence-partitioning", "boundary-value", "decision-table", "state-transition", "pairwise", "use-case", "error-guessing", "permission-matrix", "nfr"] }
+    },
+    "level": { "enum": ["unit", "api", "ui", "contract", "manual", "exploratory"] },
+    "automation": {
+      "type": "object",
+      "properties": {
+        "status": { "enum": ["candidate", "automated", "manual-only", "exploratory", "already-automated"] },
+        "path": { "type": ["string", "null"] }
+      }
+    },
+    "existingCoverage": { "type": ["string", "null"] },
+    "basis": { "enum": ["confirmed", "provisional"] },
+    "basisRefs": { "type": "array", "items": { "type": "string" } },
+    "traces": {
+      "type": "object",
+      "required": ["acceptanceCriteria"],
+      "properties": {
+        "requirements": { "type": "array", "items": { "type": "string" } },
+        "acceptanceCriteria": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "rules": { "type": "array", "items": { "type": "string" } },
+        "risks": { "type": "array", "items": { "type": "string" } },
+        "features": { "type": "array", "items": { "type": "string" } },
+        "roles": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "dataSets": { "type": "array", "items": { "type": "string" } },
+    "preconditions": { "type": "array", "items": { "type": "string" } },
+    "gherkin": { "type": "string" },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["action", "expected"],
+        "properties": { "action": { "type": "string" }, "expected": { "type": "string" } }
+      }
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "columns": { "type": "array", "items": { "type": "string" } },
+        "rows": { "type": "array", "items": { "type": "array" } }
+      }
+    },
+    "externalIds": {
+      "type": "object",
+      "description": "Platform IDs keyed by platform, e.g. { \"azure-devops\": 8812, \"jira-xray\": \"QA-45\" }",
+      "additionalProperties": { "type": ["string", "integer"] }
+    },
+    "contentHash": { "type": ["string", "null"] },
+    "status": { "enum": ["draft", "approved", "needs-review", "obsolete"] }
+  },
+  "allOf": [
+    { "if": { "properties": { "format": { "const": "gherkin" } } }, "then": { "required": ["gherkin"] } },
+    { "if": { "properties": { "format": { "const": "rule-table" } } }, "then": { "required": ["steps"] } }
+  ]
+}

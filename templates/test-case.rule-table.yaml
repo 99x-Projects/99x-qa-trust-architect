@@ -1,0 +1,38 @@
+# Test case — rule-table (step-based) format. Schema: schemas/test-case.schema.json
+id: TC-010
+title: "Approval routing by requester role and duration"
+format: rule-table
+objective: "Verify approver selection rules (decision table)"
+priority: 2
+technique: [decision-table]
+level: api
+automation:
+  status: candidate
+  path: null
+existingCoverage: null
+basis: provisional
+basisRefs: [DCP-0009]
+traces:
+  requirements: [REQ-03]
+  acceptanceCriteria: [AC-05]
+  rules: [BR-020]
+  risks: [R-02]
+  features: [F-leave-approval]
+  roles: [ROLE-employee, ROLE-manager]
+dataSets: [DS-02]
+preconditions:
+  - "Org hierarchy: employee → line manager → department head; HR group exists"
+steps:
+  - action: "Submit a leave request as <requesterRole> for <days> days"
+    expected: "Request is created with status Submitted"
+  - action: "Inspect the approval tasks created"
+    expected: "Approver(s) = <expectedApprover>"
+data:
+  columns: [requesterRole, days, expectedApprover]
+  rows:
+    - [employee, 5, "line manager"]
+    - [employee, 6, "line manager + HR"]
+    - [manager, 1, "department head"]
+externalIds: {}
+contentHash: null
+status: draft

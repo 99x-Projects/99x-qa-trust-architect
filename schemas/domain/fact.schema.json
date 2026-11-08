@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "qa-trust-architect/domain/fact.schema.json",
+  "title": "Common provenance fields for every domain fact",
+  "type": "object",
+  "required": ["status", "sources", "lastVerified"],
+  "properties": {
+    "status": { "enum": ["documented", "observed", "inferred", "confirmed", "disputed"] },
+    "verified": { "type": "boolean" },
+    "confidence": { "enum": ["high", "medium", "low", "n/a"] },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "ref"],
+        "properties": {
+          "type": { "enum": ["doc", "aidlc", "test", "error-message", "code", "schema", "tracker-story", "tracker-bug", "api-spec", "config", "live-app", "human"] },
+          "ref": { "type": "string" },
+          "hash": { "type": ["string", "null"] },
+          "quote": { "type": "string" }
+        }
+      }
+    },
+    "lastVerified": { "type": "string", "format": "date" },
+    "stale": { "type": "boolean" },
+    "tags": { "type": "array", "items": { "type": "string" } }
+  }
+}

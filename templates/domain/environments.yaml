@@ -1,0 +1,12 @@
+# NEVER store secrets here. Account entries are references to env vars / secret store keys.
+environments:
+  - name: test
+    url: "{{https://test.example.com}}"
+    agentsAllowed: true
+    dataResetPolicy: "{{nightly}}"
+    featureFlags: { newApprovalFlow: true }
+    accounts:
+      - { role: ROLE-employee, ref: "env:TEST_EMPLOYEE_USER", passwordRef: "env:TEST_EMPLOYEE_PASS" }
+  - name: prod
+    url: "{{https://app.example.com}}"
+    agentsAllowed: false            # read-only smoke only, when explicitly enabled

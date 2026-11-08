@@ -1,0 +1,14 @@
+integrations:
+  - id: INT-email
+    name: "Email notifications"
+    direction: outbound             # inbound | outbound | both
+    protocol: smtp                  # rest | soap | queue | smtp | file | db | sdk
+    features: [F-leave-approval]
+    testEnvironment: "{{sandbox / stub / none}}"
+    failureModes:
+      - "Provider unavailable → notification queued and retried?"
+      - "Invalid recipient address"
+    status: observed
+    sources:
+      - { type: config, ref: "src/appsettings.json#Smtp", hash: null }
+    lastVerified: "{{isoDate}}"

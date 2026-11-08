@@ -1,0 +1,18 @@
+rules:
+  - id: BR-012
+    statement: "An employee cannot request more than 20 leave days in a single request."
+    features: [F-leave-request]
+    entities: [ENT-leave-request]
+    kind: limit                     # limit | validation | calculation | permission | workflow | policy
+    level: critical                 # review level for changes (from domain.proposals config)
+    status: disputed                # documented | observed | inferred | confirmed | disputed
+    verified: false                 # documented facts: checked against evidence?
+    confidence: n/a                 # high | medium | low | n/a (disputed)
+    sources:
+      - { type: test,          ref: "tests/LeaveTests.cs#MaxDays",            hash: null, quote: "Assert.Equal(20, ...)" }
+      - { type: error-message, ref: "src/Resources/Messages.resx#LeaveTooLong", hash: null, quote: "maximum 20 days" }
+      - { type: code,          ref: "src/Leave/LeaveValidator.cs:42",          hash: null, quote: "LessThanOrEqualTo(30)" }
+    discrepancy: DISC-003
+    question: Q-07
+    tags: [limit]
+    lastVerified: "{{isoDate}}"

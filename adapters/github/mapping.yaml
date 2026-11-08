@@ -1,0 +1,7 @@
+# v3 — placeholder
+platform: github
+workItemType:
+  issue: Story
+  "issue+bug": Bug
+gateStatus:
+  labelPrefix: "qa-gate:"

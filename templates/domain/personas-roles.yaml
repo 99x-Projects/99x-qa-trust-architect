@@ -1,0 +1,20 @@
+roles:
+  - id: ROLE-employee
+    name: Employee
+    description: "{{who they are}}"
+    goals: ["{{goal}}"]
+    accountRef: "env:TEST_EMPLOYEE_USER"     # reference only — never a secret
+    permissions:
+      - action: "leave.request.create"
+        allowed: true
+        status: observed                      # documented | observed | inferred | confirmed | disputed
+        confidence: high
+        sources:
+          - { type: code, ref: "src/Leave/LeaveController.cs#Create", hash: null }
+        lastVerified: "{{isoDate}}"
+      - action: "leave.request.approve"
+        allowed: false
+        status: observed
+        confidence: medium
+        sources: []
+        lastVerified: "{{isoDate}}"
