@@ -90,6 +90,24 @@ the YAML files so re-syncing updates instead of duplicating.
 - **Automated results:** `/qa-execute 1234 --import TestResults/run.trx` (JUnit XML or TRX). Tag
   automated tests with their `TC-xxx` id to link them automatically.
 
+### Exploratory testing in the browser
+
+```
+/qa-explore 1234 charters          # charters from the item's risks and gaps
+/qa-explore 1234 run CH-01         # asks the mode
+```
+
+| Mode | What happens |
+|---|---|
+| **autonomous** | You log in in the browser window; the AI explores the charter alone within its time box and writes a session report |
+| **guided** | The AI drives the browser, shows what it sees and proposes probes; you steer ("now try it as a manager", "try 0 days") |
+| **pair** | You drive the browser; say "note" or "check this" and the AI snapshots the page, compares it with the rules and logs it |
+
+Findings are classified like test failures: only violations of approved AC / confirmed rules (or
+crashes, 5xx, console errors) become defect drafts; the rest become questions, quirk candidates,
+app-map updates or test-case suggestions. `/qa-explore 1234 retest DEF-001` re-verifies a fix in the
+browser.
+
 ## 7. Defects
 
 Each failure is triaged. Only failures against an **approved AC or confirmed business rule** become

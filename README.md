@@ -30,7 +30,7 @@ PHASE 4  OPERATIONS  4.1 Release verification · 4.2 Observability validation ·
 | Command | Purpose |
 |---|---|
 | `/qa-init` | Phase 0 setup: detect workspace, write `qa-trust.config.yaml`, kick off domain discovery |
-| `/qa-domain build\|refresh\|ask\|review\|accept\|reject` | Build and maintain the domain context; review Domain Change Proposals (DCPs) |
+| `/qa-domain build\|refresh\|crawl\|ask\|review\|accept\|reject` | Build and maintain the domain context; review Domain Change Proposals (DCPs) |
 | `/qa-start <work-item-id>` | Intake a work item, choose tier, start Phase 1 |
 | `/qa-continue [work-item-id]` | Resume from `qa-state.md` |
 | `/qa-gate <G0..G5> [work-item-id]` | Read → analyse → decide → record a gate |
@@ -38,7 +38,7 @@ PHASE 4  OPERATIONS  4.1 Release verification · 4.2 Observability validation ·
 | `/qa-sync [work-item-id]` | Push/pull artifacts with the work item platform |
 | `/qa-execute [id] [--sheet\|--ingest\|--import <file>]` | Phase 3: run test cases (in chat or offline sheet), import JUnit/TRX results, record runs |
 | `/qa-defect [id] list\|confirm\|retest\|refresh…` | Review drafted defects; create confirmed ones in ADO; retest fixes |
-| `/qa-explore` | *(v2, in progress)* Exploratory/focused testing via Playwright MCP |
+| `/qa-explore [id] charters\|run <CH>\|retest <DEF>\|smoke` | Exploratory, focused and re-verification sessions in the browser via Playwright MCP (autonomous, guided or pair) |
 
 ## Quick start
 
@@ -71,7 +71,7 @@ PHASE 4  OPERATIONS  4.1 Release verification · 4.2 Observability validation ·
 | `schemas/` | Canonical, platform-neutral JSON schemas |
 | `adapters/` | Work item platform adapters (`azure-devops` MVP, `jira-xray` v2, `github` v3) |
 | `integrations/` | Other SDLC workflows (`aidlc`) |
-| `agents/` | Specialist sub-agents (domain, requirement, risk-gap, test design, automation, execution, sync; exploratory in v2) |
+| `agents/` | Specialist sub-agents (domain, requirement, risk-gap, test design, automation, execution, exploratory, sync) |
 | `scripts/` | Framework helpers (`import_results.py` — JUnit/TRX normaliser) |
 | `skills/` | User-facing `/qa-*` commands — they orchestrate in the main session, because questions and gates need the human |
 | `config/` | Example project config |
@@ -84,6 +84,6 @@ PHASE 4  OPERATIONS  4.1 Release verification · 4.2 Observability validation ·
 | Release | Scope |
 |---|---|
 | **MVP (0.1)** | Phase 0 (incl. domain discovery w/o live crawl), Phase 1, stage 2.1 (+2.2–2.4 drafts), G0–G3 advisory, DCPs, context loader, repo storage, Azure DevOps adapter, AI-DLC companion mode |
-| v2 | **Slice A ✅** Phase 3 execution core (manual runs, defects, regression, summary) + G4 · B Playwright MCP exploratory testing + live crawl · C hardened 2.2–2.4 · F guard hooks · D Jira + Xray · E AI-DLC gate alignment & write-back |
+| v2 | **Slice A ✅** Phase 3 execution core (manual runs, defects, regression, summary) + G4 · **B ✅** Playwright MCP exploratory testing + live crawl · C hardened 2.2–2.4 · F guard hooks · D Jira + Xray · E AI-DLC gate alignment & write-back |
 | v3 | GitHub adapter, two-way sync + drift detection, AI-DLC embedded mode |
 | v4 | Automation script generation, Phase 4 observability & escape analysis, metrics dashboards |

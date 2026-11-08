@@ -15,7 +15,7 @@ Facts start as `observed`/`inferred` and become oracles only once `confirmed`.
 | Tracker history | Past intent; **bug reports reveal expected behaviour** | closed stories' AC, bugs' "expected result" field, epic descriptions |
 | API specs / routes | Feature surface, operations, inputs | OpenAPI, controllers, GraphQL schema, route config |
 | Config & feature flags | Variants, limits, env differences | appsettings, `.env.example`, flag definitions |
-| Live app (v2) | Screens, flows, roles as users experience them | Playwright crawl per role |
+| Live app | Screens, flows, roles as users experience them | Playwright crawl per role (`live-crawl.md`) |
 | Logs / analytics (optional) | Which journeys matter most | provided exports only |
 
 ## 2. Rule-mining patterns (examples)

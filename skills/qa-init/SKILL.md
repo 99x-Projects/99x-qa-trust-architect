@@ -21,6 +21,8 @@ argument-hint: "[--rebaseline]"
 5. **0.2 Domain discovery** — delegate to agent `qa-trust-architect:domain-analyst` with task
    `build` (pass FRAMEWORK_ROOT, project root, DOMAIN_DIR, config excerpt `domain`,
    `integrations.aidlc`, detected profile). Large repos: tell the user this may take a while.
+   If `domain.discovery.sources.liveApp: true`: after the build, run the live crawl as in
+   `/qa-domain crawl` (asks the tester to log in per role; skip with a note if no environment is reachable).
 6. **0.3 QA reverse engineering** (brownfield only) — follow
    `rules/phase-0-setup/0.3-qa-reverse-engineering.md` (inline or delegate to domain-analyst).
 7. **0.4 Quality standards** — follow `rules/phase-0-setup/0.4-quality-standards.md`.

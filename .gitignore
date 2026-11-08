@@ -3,6 +3,7 @@
 .env.*
 !.env.example
 .auth/
+.playwright-mcp/
 
 # Python
 __pycache__/

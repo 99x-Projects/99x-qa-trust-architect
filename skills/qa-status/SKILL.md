@@ -16,7 +16,8 @@ pending DCPs raised by the item, `followUps`, sync table summary, next step.
 In Phase 3 also: current cycle (build/env), executed/passed/failed/blocked of planned TCs,
 regression pass rate, untriaged failures, defects by status and severity (drafts awaiting
 confirmation highlighted; refresh platform states first if `execution.defects.refreshStatusOnStatus`),
-unpublished runs.
+unpublished runs, exploratory charters (planned / done / skipped; mandatory high-risk ones outstanding)
+and sessions with open findings.
 
 **Project view** (`--project` or no active item): G0 status, `domainVersion`, features
 skeleton/deep, rules by status, open discrepancies, pending DCPs by level with age (flag

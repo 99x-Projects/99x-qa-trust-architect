@@ -44,12 +44,12 @@ Anything not recognised is still read as plain source — detection is a head st
 
 | Area | MVP (0.1) | Later |
 |---|---|---|
-| Setup & domain (Phase 0, G0) | ✅ incl. docs-led + evidence-led discovery, DCPs | Live app crawl via Playwright (v2) |
+| Setup & domain (Phase 0, G0) | ✅ incl. docs-led + evidence-led discovery, DCPs | ✅ v2: live app crawl per role via Playwright MCP |
 | Requirements → AC → risk → gaps → plan (Phase 1, G1, G2) | ✅ | — |
 | Test case design (2.1, G3) | ✅ | — |
 | Test data, automation gap, observability design (2.2–2.4) | Draft rules | Hardened in v2 |
 | Execution: manual runs, defects, regression, test summary (3.2a, 3.3–3.5, G4) | ✅ v2 slice A | Automation implementation 3.1 in v4 |
-| Exploratory testing via Playwright MCP (3.2b) | Design only | v2 slice B |
+| Exploratory testing via Playwright MCP (3.2b) | Design only | ✅ v2 slice B: charters; autonomous, guided and pair sessions; bug re-verification; smoke |
 | Release verification, escape analysis, metrics (Phase 4, G5) | Stubs | v4 |
 | Gates | Advisory | Per-gate *blocking* option already in config |
 

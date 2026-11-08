@@ -81,7 +81,11 @@ domain:
       code: true
       dataModel: true
       trackerHistory: { lookbackMonths: 12 }
-      liveApp: false              # v2 (Playwright crawl)
+      liveApp: false              # true → /qa-init runs the Playwright live crawl per role (needs a running env)
+    crawl:
+      maxPages: 60                # per role
+      maxDepth: 4
+      roles: all                  # all | [ROLE-employee, ROLE-manager]
     corroboration:
       highConfidence: 2           # independent sources needed for "high"
   proposals:
@@ -128,13 +132,20 @@ execution:
 
 # ─── Exploratory testing via Playwright MCP (v2) ────────────────────────
 exploratory:
-  mcp: playwright
+  mcp: playwright                 # MCP server name (plugin default; see auth.roles for per-role servers)
   environments:
-    allowed: [dev, test, staging]
+    allowed: [dev, test, staging] # AND environments.yaml → agentsAllowed: true. Production is always refused.
+  allowedOrigins: []              # extra origins besides the env base URL, e.g. ["https://login.microsoftonline.com"]
   auth:
-    storageStatePath: ".auth/{env}.json"
-    credentialsFromEnv: true
+    strategy: manual              # manual (tester logs in in the browser window) | storage-state
+    storageStatePath: ".auth/{env}-{role}.json"   # recorded by the tester; gitignored; never read by the AI
+    roles: {}                     # storage-state only, e.g. { ROLE-employee: { mcpServer: playwright-employee } }
   guards:
-    blockActions: ["delete", "pay", "send email"]
+    blockActions: ["delete", "remove", "pay", "purchase", "transfer", "send email", "send notification",
+                   "deactivate", "approve payment", "purge"]
     maxSessionMinutes: 30
-  defectCreation: confirm
+    maxActions: 150
+  sessions:
+    defaultMode: ask              # autonomous | guided | pair | ask
+    mandatoryCharters: high-risk  # high-risk | all | none
+  defectCreation: confirm         # always confirm — not configurable to auto

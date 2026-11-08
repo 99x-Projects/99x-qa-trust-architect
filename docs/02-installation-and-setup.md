@@ -7,7 +7,7 @@
 | **Claude Code** | Everything | `claude --version` |
 | **Git** | Detecting project history, tracking artifacts | `git --version` |
 | **Python 3.8+** | Azure DevOps test case helper (`adapters/azure-devops/scripts/ado_testcase.py`, standard library only) | `python --version` |
-| **Node.js 18+** (`npx`) | Azure DevOps MCP server | `npx --version` |
+| **Node.js 18+** (`npx`) | Azure DevOps MCP server; Playwright MCP server (exploratory testing, live crawl) | `npx --version` |
 | Azure CLI + `azure-devops` extension *(optional)* | Fallback route for some ADO operations | `az devops -h` |
 | Azure DevOps access | Read work items; write work items and Test Plans | A PAT — see [page 3](03-credentials-and-test-accounts.md) |
 
@@ -38,7 +38,7 @@ Check it loaded: type `/qa-` — you should see `qa-init`, `qa-start`, `qa-gate`
    ```bash
    cp <path-to>/99x-qa-trust-architect/config/.env.example .env
    ```
-2. Make sure `.env` is gitignored in **that** project (add `.env` and `.auth/` to its `.gitignore`).
+2. Make sure `.env` is gitignored in **that** project (add `.env`, `.auth/` and `.playwright-mcp/` to its `.gitignore`).
 3. Fill in `ADO_PAT` (and `ADO_ORG`) in your editor.
 4. For the Azure DevOps MCP server, also set `ADO_ORG` in your shell — see
    [page 3](03-credentials-and-test-accounts.md#how-each-tool-gets-the-credentials).
@@ -71,6 +71,19 @@ docs/qa/_project/
   quality-standards.md
   audit.md
 ```
+
+### Optional — browser for exploratory testing and the live crawl
+
+The plugin starts the **Playwright MCP server** (`@playwright/mcp`) automatically. The first time,
+install a browser for it:
+
+```bash
+npx playwright install chromium
+```
+
+Check it in Claude Code with `/mcp` — `playwright` should be connected. If `domain.discovery.sources.liveApp`
+is `true`, `/qa-init` also crawls the running application per role (you log in in the browser window).
+How logins work: [page 3](03-credentials-and-test-accounts.md#3-how-the-browser-gets-logged-in).
 
 ## Step 5 — Answer questions and approve the baseline (G0)
 
@@ -111,4 +124,6 @@ example is `config/qa-trust.config.example.yaml`; the schema is
 | "Config missing — run /qa-init" | You are not in the project root, or `/qa-init` has not been run there. |
 | Connection test fails (401) | PAT missing/expired or wrong scopes — see [page 3](03-credentials-and-test-accounts.md). |
 | MCP server fails to start | `ADO_ORG` not set in the shell that started Claude Code, or Node.js/`npx` missing. The helper script and repo-only mode still work. |
+| `/qa-explore` says the browser tools are missing | `/mcp` → check `playwright` is connected; run `npx playwright install chromium`; restart Claude Code. |
+| Exploratory session stops at a login page | Strategy `manual`: log in in the browser window when asked. `storage-state`: the recorded session expired — record it again. |
 | `.env` warning: not gitignored | Add `.env` to the project's `.gitignore` — `/qa-init` offers to do this. |

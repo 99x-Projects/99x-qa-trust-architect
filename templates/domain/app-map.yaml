@@ -1,4 +1,5 @@
-# App map — mostly filled by the v2 live crawl (Playwright MCP); MVP seeds it from route config.
+# App map — seeded from route config (0.2), filled by the live crawl (/qa-domain crawl, live-crawl.md)
+# and by exploratory sessions (app-map DCPs, auto level).
 baseUrls:
   test: "{{https://test.example.com}}"
 pages:

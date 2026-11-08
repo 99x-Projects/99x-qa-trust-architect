@@ -178,6 +178,46 @@
         }
       }
     },
-    "exploratory": { "type": "object" }
+    "exploratory": {
+      "type": "object",
+      "properties": {
+        "mcp": { "type": "string" },
+        "environments": {
+          "type": "object",
+          "properties": { "allowed": { "type": "array", "items": { "type": "string", "not": { "enum": ["prod", "production"] } } } }
+        },
+        "allowedOrigins": { "type": "array", "items": { "type": "string", "pattern": "^https?://" } },
+        "auth": {
+          "type": "object",
+          "properties": {
+            "strategy": { "enum": ["manual", "storage-state"] },
+            "storageStatePath": { "type": "string" },
+            "roles": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "properties": { "mcpServer": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "guards": {
+          "type": "object",
+          "properties": {
+            "blockActions": { "type": "array", "items": { "type": "string" } },
+            "maxSessionMinutes": { "type": "integer", "minimum": 1, "maximum": 240 },
+            "maxActions": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "sessions": {
+          "type": "object",
+          "properties": {
+            "defaultMode": { "enum": ["autonomous", "guided", "pair", "ask"] },
+            "mandatoryCharters": { "enum": ["high-risk", "all", "none"] }
+          }
+        },
+        "defectCreation": { "const": "confirm" }
+      }
+    }
   }
 }

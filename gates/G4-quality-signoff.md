@@ -12,7 +12,7 @@ The test summary report's recommendation is input, not the decision.
 | C3 | No open defects at or above the blocking severity (default Sev1/Sev2), or each accepted with a named risk and owner | defect-log.md, defects/*.yaml |
 | C4 | No failed/blocked run left `untriaged`; every product failure has a DEF or a question | runs/*.yaml |
 | C5 | Regression set executed and failures triaged (if 3.4 ran for the tier) | regression.md |
-| C6 | Exploratory sessions completed for high-risk charters (if 3.2b ran; else `n/a`) | 3-execution/sessions/ |
+| C6 | Mandatory exploratory charters (`exploratory.sessions.mandatoryCharters`, default high-risk) run or skipped with reason; their findings triaged (`n/a` for light tier) | charters.md, sessions/*/session-report.md |
 | C7 | Every AC has ≥ 1 passed TC, or the gap is a named residual risk | test-summary-report.md §4 |
 | C8 | All earlier gate overrides / approved-with-risks / stale gates listed and acknowledged | test-summary-report.md §6 |
 | C9 | DCPs and questions raised during execution reviewed (none pending at critical level) | `_proposals/`, questions.md |

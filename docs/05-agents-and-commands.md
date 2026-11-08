@@ -34,7 +34,7 @@ You ──/qa-start──► orchestrator (main session) ──► requirement-a
 | `/qa-sync [id] [--what ac\|tests\|gates\|all] [--check]` | Pushes artifacts to the platform on demand; `--check` reports drift | When `syncMode` isn't `on-gate`, or to re-push |
 | `/qa-execute [id] [--tc …] [--set planned\|regression\|retest] [--sheet \| --ingest] [--import <file>]` | Opens a test cycle (build + environment, entry criteria), runs test cases step by step in chat or via an offline execution sheet, imports JUnit/TRX results, records `RUN-xxx` files with evidence | Phase 3, after G3 |
 | `/qa-defect [id] list \| confirm \| reject \| duplicate \| defer \| accept \| refresh \| retest` | Reviews drafted defects; **you confirm** before anything is created in ADO; refreshes bug states; retests fixes | Phase 3 |
-| `/qa-explore …` | *(v2 slice B)* Exploratory testing via Playwright MCP | Not yet implemented |
+| `/qa-explore [id] charters \| run <CH-id> [--mode autonomous\|guided\|pair] \| retest <DEF> \| smoke \| report <SES>` | Plans charters from risks and gaps; runs browser sessions through Playwright MCP (AI explores alone, you steer, or you drive and the AI takes notes); re-verifies fixed bugs; turns findings into defect drafts, questions and domain updates | Phase 3, after G3 |
 
 ## Agents
 
@@ -101,11 +101,18 @@ You ──/qa-start──► orchestrator (main session) ──► requirement-a
 - **Output:** `3-execution/runs/`, `execution-log.md`, `defects/`, `defect-log.md`, `regression.md`,
   `test-summary-report.md`. **Gate:** G4.
 
-### exploratory-tester — *(v2)*
-- **Stage:** 3.2b. Charter-based exploratory / focused testing of the web app through the
-  Playwright MCP server, using the domain context as oracle, capturing evidence and proposing
-  defects (with your confirmation), new test cases and DCPs. Design in
-  `rules/phase-3-execution/3.2b-exploratory-playwright.md`.
+### exploratory-tester — *explores the running app*
+- **Stages:** 3.2b charters and autonomous sessions, bug re-verification, smoke; live crawl for the
+  app map (`/qa-domain crawl`).
+- **Does:** writes charters (target, role, oracles, quirks to ignore, heuristics, time box); explores
+  in a real browser via the Playwright MCP accessibility snapshot — boundaries, invalid input,
+  interruptions, permissions by URL, state transitions, consistency, a11y basics, small screens;
+  watches console errors and failed requests; screenshots findings; writes a session report.
+- **Safety:** allowed environments and web addresses only, never production, never sees or types
+  passwords, skips destructive actions (delete, pay, send…) and lists them for you, time-boxed.
+- **Never** creates defects — candidates go to the execution-analyst and you confirm.
+- **Output:** `3-execution/charters.md`, `3-execution/sessions/SES-xxx/` (report + evidence), app-map
+  DCPs, questions. **Gate:** G4 (C6).
 
 ## Which agent runs at which stage
 
@@ -123,7 +130,7 @@ You ──/qa-start──► orchestrator (main session) ──► requirement-a
 | Sync after any gate | sync-agent | |
 | 3.1 Automation implementation | v4 (non-blocking stub) | |
 | 3.2a Manual execution | you, via `/qa-execute` (execution-analyst prepares/ingests) | |
-| 3.2b Exploratory | exploratory-tester (v2 slice B) | |
+| 3.2b Exploratory | exploratory-tester (autonomous) or you + AI (`/qa-explore`, guided/pair) | |
 | 3.3 Defects | execution-analyst drafts → **you confirm** (`/qa-defect`) → sync-agent creates | |
 | 3.4 Regression | execution-analyst + you (run/import) | |
 | 3.5 Test summary | execution-analyst | **G4 Quality Sign-off** |

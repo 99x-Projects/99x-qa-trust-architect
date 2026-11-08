@@ -17,13 +17,14 @@ argument-hint: "[work-item-id] [--tier <tier>]"
    - If a gate precedes it and is undecided: in `advisory` mode explain the unmet gate and ask
      "run `/qa-gate Gx` now, or proceed (override)?" — on proceed, record `overridden` with
      reason per `core/gate-protocol.md` §3. In `blocking` mode, stop.
-   - Stage not implemented: if its rule file says **non-blocking** (3.1, 3.2b until slice B) → mark
+   - Stage not implemented: if its rule file says **non-blocking** (3.1) → mark
      `not-implemented`, say so in one line, continue; otherwise say so, mark it, stop.
 5. Run stages until the next gate by delegating (`core-workflow.md` §9):
    1.4–1.6 → `risk-gap-analyst`; 2.1–2.2 → `test-designer`; 2.3 → `automation-analyst`;
    2.4 → `risk-gap-analyst`. Skip stages the tier excludes.
    **Phase 3** needs the tester: 3.2a → hand over to `/qa-execute` (tell the user, don't simulate
-   execution); 3.3 → `/qa-defect` for drafts awaiting confirmation; 3.4 → delegate
+   execution); 3.2b → if the tier includes it, delegate `plan-charters` to `exploratory-tester` when
+   `charters.md` is missing, then hand over to `/qa-explore run <CH-id>`; 3.3 → `/qa-defect` for drafts awaiting confirmation; 3.4 → delegate
    `select-regression` to `execution-analyst`, then ask the tester to run it (`/qa-execute --set
    regression` / `--import`); 3.5 → delegate `summary` to `execution-analyst` once 3.2a–3.4 are
    done (or the tester says execution is complete), then point to `/qa-gate G4`.

@@ -1,7 +1,7 @@
 ---
 name: qa-domain
 description: Build, refresh, query and govern the QA Trust Architect domain context of the application under test â€” build, refresh (staleness/AI-DLC changes), deepen a feature, ask a question about the domain, and review/accept/reject Domain Change Proposals (DCPs). Use when the user asks about the app's business rules, roles, features, or wants to review domain updates.
-argument-hint: "build | refresh | deepen <F-id> | ask <question> | review | accept <DCP-ids|all-auto|all> | reject <DCP-id> <reason>"
+argument-hint: "build | refresh | deepen <F-id> | crawl [--env <env>] [--role <ROLE-id>|all] | ask <question> | review | accept <DCP-ids|all-auto|all> | reject <DCP-id> <reason>"
 ---
 
 # /qa-domain
@@ -20,6 +20,13 @@ raise re-verify DCPs, sync AI-DLC changes (`integrations/aidlc/integration.md` Â
 
 ## deepen <F-id>
 Delegate to `domain-analyst` (task `deepen`). Output is DCPs.
+
+## crawl [--env <env>] [--role <ROLE-id>|all]
+Live crawl of the running app per role (`rules/phase-0-setup/0.2-domain-discovery/live-crawl.md`).
+Preflight and login exactly as `/qa-explore` (Playwright MCP available, environment allowed, never
+production, the tester logs in in the browser window or the role's storage-state server is used).
+For each role: log in, then delegate `crawl` to `qa-trust-architect:exploratory-tester`. Output is DCPs
+(app-map auto-level; permissions critical). Report pages per role, new/unmapped pages, DCPs by level.
 
 ## ask <question>
 Answer from the domain context only (load via `core/context-loader.md`). For every fact used,

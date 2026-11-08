@@ -94,9 +94,13 @@ claude --plugin-dir <path-to>/99x-qa-trust-architect
 
 ## Test accounts (usernames & passwords)
 
-Test accounts are needed when an agent or tester logs into the application under test —
-mainly **exploratory testing via Playwright MCP (v2)**. In the MVP they are recorded as
-references so test data and test cases can name the right role.
+Test accounts are needed when a tester or the AI logs into the application under test —
+manual execution (`/qa-execute`), exploratory sessions and the live crawl (`/qa-explore`,
+`/qa-domain crawl`, both through the Playwright MCP browser).
+
+**The AI never sees or types a test account password.** It only knows *which* account a role
+uses (the env-var name). Logging in is done by a person — in the browser window, or once up front
+to record a reusable login session (below).
 
 ### 1. Values go in `.env` — one pair per role and environment
 
@@ -127,14 +131,62 @@ environments:
     agentsAllowed: false        # agents never touch prod by default
 ```
 
-Roles (`ROLE-…`) match `personas-roles.yaml`, so an agent testing "manager approves leave"
-knows which account to use without ever seeing the password in a file it writes.
+Roles (`ROLE-…`) match `personas-roles.yaml`, so the AI can say "log in as the manager — the
+account in `TEST_MANAGER_USER`" without ever reading the value. The `.env` entries are a shared,
+gitignored place for testers to find the right account; nothing in the framework reads them.
 
-### 3. Login sessions (v2)
+### 3. How the browser gets logged in
 
-For exploratory testing the browser login session is cached as Playwright *storage state* in
-`.auth/{env}.json` (`exploratory.auth.storageStatePath`). This file contains session cookies —
-treat it as a secret and keep `.auth/` gitignored.
+Set `exploratory.auth.strategy` in `qa-trust.config.yaml`:
+
+**`manual` (default — simplest and safest).** At the start of each session the AI opens the
+application's login page in the Playwright browser window and asks you to log in as the role.
+You type the credentials into the browser yourself; the AI checks the page shows you signed in
+and carries on (autonomous mode starts only after that). The plugin's `playwright` MCP server runs
+`--isolated`, so the login is forgotten when the browser closes.
+
+**`storage-state` (for repeated or autonomous sessions).** Record a login once per role and
+environment, then let a dedicated MCP server reuse it:
+
+1. Record the session — a browser opens, you log in, close the browser:
+   ```bash
+   npx playwright codegen --save-storage=.auth/test-employee.json https://test.example.com
+   ```
+2. Add a per-role server to the **project's** `.mcp.json` (next to the plugin's default one):
+   ```json
+   {
+     "mcpServers": {
+       "playwright-employee": {
+         "command": "npx",
+         "args": ["-y", "@playwright/mcp@latest", "--isolated",
+                  "--storage-state", ".auth/test-employee.json", "--output-dir", ".playwright-mcp"]
+       }
+     }
+   }
+   ```
+3. Point the role at it in `qa-trust.config.yaml`:
+   ```yaml
+   exploratory:
+     auth:
+       strategy: storage-state
+       roles:
+         ROLE-employee: { mcpServer: playwright-employee }
+   ```
+4. Re-record when the session expires (you'll see the login page at the start of a session).
+
+`.auth/*.json` files contain live session cookies — treat them like passwords: keep `.auth/`
+gitignored, never commit or share them, delete them when the environment is refreshed. The AI never
+opens them.
+
+### 4. What the AI may do in the browser
+
+- Only environments in `exploratory.environments.allowed` **and** marked `agentsAllowed: true` in
+  `environments.yaml`; **production is always refused**.
+- Only the environment's own web address plus `exploratory.allowedOrigins` (e.g. your SSO login page).
+- Never click actions matching `exploratory.guards.blockActions` (delete, pay, send email, …) without
+  asking you — in autonomous mode it skips them and lists them in the report.
+- Time box and action limit per session (`maxSessionMinutes`, `maxActions`).
+- Free text it enters is prefixed `QA-SES-xxx-…`, and records it creates are listed for cleanup.
 
 ### Good practice for test accounts
 
@@ -147,7 +199,7 @@ treat it as a secret and keep `.auth/` gitignored.
 ## Checklist
 
 - [ ] `.env` exists in the project under test and `git check-ignore .env` prints `.env`
-- [ ] `.auth/` is gitignored
+- [ ] `.auth/` and `.playwright-mcp/` are gitignored
 - [ ] `ADO_PAT` has only *Work Items* and *Test Management* scopes and an expiry date
 - [ ] `ADO_ORG` is set in the shell (or `.claude/settings.local.json`) for the MCP server
 - [ ] `environments.yaml` contains only `env:` references, no real usernames/passwords
