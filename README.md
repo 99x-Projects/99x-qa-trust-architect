@@ -39,12 +39,23 @@ PHASE 4  OPERATIONS  4.1 Release verification · 4.2 Observability validation ·
 
 ## Quick start
 
-1. Install the plugin (`/plugin install` from your marketplace, or `claude --plugin-dir ./qa-trust-architect`).
-2. In your project: `/qa-init` → review the generated `qa-trust.config.yaml`.
-   Put secrets (e.g. `ADO_PAT`) in the project's `.env` (template: `config/.env.example`),
-   keep it gitignored. Shell environment variables override the file.
-3. Approve the domain baseline: `/qa-gate G0`.
+1. Clone this repo, then in **the project you want to test** start Claude Code with
+   `claude --plugin-dir <path-to>/99x-qa-trust-architect`.
+2. Copy `config/.env.example` to the project's `.env` (gitignored) and fill in `ADO_PAT`;
+   set `ADO_ORG` in your shell for the Azure DevOps MCP server.
+3. `/qa-init` → answer the setup and domain questions → `/qa-gate G0`.
 4. Pick a story: `/qa-start 1234` → answer `questions.md` → `/qa-gate G1` → …
+
+## Documentation
+
+| Page | Covers |
+|---|---|
+| [Supported projects](docs/01-supported-projects.md) | Project types, platforms, tech stacks, what's in each release |
+| [Installation & setup](docs/02-installation-and-setup.md) | Prerequisites, install, `/qa-init`, configuration reference, troubleshooting |
+| [Credentials & test accounts](docs/03-credentials-and-test-accounts.md) | Azure DevOps PAT, `.env`, MCP/CLI auth, test usernames & passwords |
+| [Existing projects](docs/04-existing-projects.md) | With docs, without docs, with AI-DLC; keeping the domain current |
+| [Agents & commands](docs/05-agents-and-commands.md) | Every `/qa-*` command and specialist agent, stage-to-agent map, tiers |
+| [Daily workflow](docs/06-daily-workflow.md) | One story from `/qa-start` to approved test cases in ADO |
 
 ## Repository layout
 
@@ -62,6 +73,7 @@ PHASE 4  OPERATIONS  4.1 Release verification · 4.2 Observability validation ·
 | `config/` | Example project config |
 | `hooks/` | Optional guard hooks |
 | `examples/` | Greenfield / brownfield walkthroughs |
+| `docs/` | User documentation (start at `docs/README.md`) |
 
 ## Roadmap
 
