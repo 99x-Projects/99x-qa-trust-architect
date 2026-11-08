@@ -1,0 +1,43 @@
+# Defect — canonical. Schema: schemas/defect.schema.json
+# File: ITEM_DIR/3-execution/defects/DEF-001.yaml
+# Created on the platform ONLY after a tester confirms it (/qa-defect confirm).
+id: DEF-001
+workItemKey: "{{ADO-1234}}"
+title: "Leave request over 20 days is accepted instead of rejected"
+status: draft                   # draft | confirmed | logged | fixed | retest-passed | retest-failed | closed | rejected | duplicate | deferred | accepted
+stepsToReproduce:
+  - "Log in as an employee with a leave balance of 25 days (test env)"
+  - "Open Leave → New request"
+  - "Enter 21 consecutive days and submit"
+expected: "Request is rejected with 'Leave cannot exceed 20 days per request' (AC-03, BR-012)"
+actual: "Request is accepted and appears as Pending"
+severity: Sev2                  # Sev1 | Sev2 | Sev3 | Sev4 (quality-standards.md severity scale)
+priority: 2
+environment: test
+build: "{{build}}"
+evidence:
+  - 3-execution/evidence/RUN-001/step2.png
+traces:
+  workItem: "{{ADO-1234}}"
+  runs: [RUN-001]
+  testCases: [TC-001]
+  acceptanceCriteria: [AC-03]
+  rules: [BR-012]
+  features: [F-leave-request]
+  session: null
+oracleBasis: acceptance-criterion   # confirmed | documented-verified | acceptance-criterion
+checks:
+  oracle: ok                    # ok | provisional | disputed  (provisional/disputed → question, not defect)
+  knownQuirk: null
+  possibleDuplicates: []        # platform IDs of similar open defects
+  reproduced: true
+confirmedBy: null
+confirmedAt: null
+resolution: null
+acceptedRisk: null
+platformState: null
+retests: []
+externalIds: {}                 # { azure-devops: 9921 }
+contentHash: null
+createdAt: "{{isoDateTime}}"
+updatedAt: "{{isoDateTime}}"

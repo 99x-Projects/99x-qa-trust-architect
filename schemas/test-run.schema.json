@@ -1,21 +1,53 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "qa-trust-architect/test-run.schema.json",
-  "title": "Test run result (v2)",
+  "title": "Test run result",
+  "description": "One execution of one test (a QA Trust test case or an existing automated test). Stored as ITEM_DIR/3-execution/runs/RUN-xxx.yaml.",
   "type": "object",
-  "required": ["id", "caseId", "result", "executedAt"],
+  "required": ["id", "result", "executedAt", "mode", "set"],
+  "anyOf": [
+    { "required": ["caseId"] },
+    { "required": ["testRef"] }
+  ],
   "properties": {
-    "id": { "type": "string" },
-    "caseId": { "type": "string", "pattern": "^TC-[0-9]{3,}$" },
+    "id": { "type": "string", "pattern": "^RUN-[0-9]{3,}$" },
+    "caseId": { "type": "string", "pattern": "^TC-[0-9]{3,}$", "description": "QA Trust test case executed" },
+    "testRef": { "type": "string", "description": "Existing automated/regression test executed (e.g. 'tests/LeaveTests.cs::MaxDays'), when not a TC" },
+    "set": { "enum": ["planned", "regression", "retest", "smoke"], "description": "Why it was run" },
+    "cycle": { "type": "string", "pattern": "^CY-[0-9]{2,}$", "description": "Execution cycle (one build/environment pass)" },
     "result": { "enum": ["passed", "failed", "blocked", "skipped", "not-run"] },
+    "mode": { "enum": ["manual", "automated", "exploratory"] },
     "executedBy": { "type": "string" },
     "executedAt": { "type": "string", "format": "date-time" },
+    "durationMinutes": { "type": ["number", "null"] },
     "environment": { "type": "string" },
     "build": { "type": "string" },
-    "mode": { "enum": ["manual", "automated", "exploratory"] },
-    "evidence": { "type": "array", "items": { "type": "string" } },
-    "defects": { "type": "array", "items": { "type": "string" } },
+    "dataSet": { "type": ["string", "null"], "description": "DS-xx used" },
+    "exampleRow": { "type": ["integer", "null"], "description": "For Scenario Outline / rule-table TCs: 1-based row executed (null = all rows)" },
+    "stepResults": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["step", "result"],
+        "properties": {
+          "step": { "type": "integer", "minimum": 1 },
+          "result": { "enum": ["passed", "failed", "blocked", "skipped"] },
+          "actual": { "type": "string" }
+        }
+      }
+    },
+    "actual": { "type": "string", "description": "What actually happened (required in practice when failed/blocked)" },
+    "blockedReason": { "type": ["string", "null"] },
+    "failureClass": {
+      "enum": ["product-defect", "test-defect", "environment", "data", "flaky", "expected-quirk", "provisional-oracle", "untriaged", null],
+      "description": "Triage outcome for failed/blocked runs (3.3/3.4)"
+    },
+    "evidence": { "type": "array", "items": { "type": "string" }, "description": "Paths relative to ITEM_DIR (screenshots, logs, videos, result files)" },
+    "defects": { "type": "array", "items": { "type": "string", "pattern": "^DEF-[0-9]{3,}$" } },
+    "retestOf": { "type": ["string", "null"], "description": "DEF-xxx when this run re-tests a defect fix" },
+    "source": { "type": ["string", "null"], "description": "Imported result file for automated runs" },
     "notes": { "type": "string" },
-    "externalIds": { "type": "object" }
+    "externalIds": { "type": "object", "description": "e.g. { azure-devops: { runId: 77, resultId: 100000 } }" },
+    "published": { "type": "boolean", "default": false }
   }
 }

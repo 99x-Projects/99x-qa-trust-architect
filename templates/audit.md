@@ -7,7 +7,8 @@ Format: `<ISO-8601 timestamp> | <EVENT> | <actor> | <details>`
 Events: `STAGE-START`, `STAGE-DONE`, `QUESTION-RAISED`, `QUESTION-ANSWERED`,
 `GATE` (approved|approved-with-risks|rejected|overridden|stale), `TIER-SET`, `TIER-OVERRIDE`,
 `DCP-RAISED`, `DCP-ACCEPTED`, `DCP-REJECTED`, `DCP-AUTO-ACCEPTED`, `SYNC`, `SYNC-DRIFT`,
-`INTEGRATION`.
+`INTEGRATION`, `CYCLE-OPENED`, `RUN-RECORDED`, `RUNS-IMPORTED`, `DEFECT-DRAFTED`, `DEFECT-CONFIRMED`,
+`DEFECT-LOGGED`, `DEFECT-STATUS`, `RETEST`, `RISK-ACCEPTED`.
 
 | Timestamp | Event | Actor | Details |
 |---|---|---|---|

@@ -21,8 +21,10 @@ says how fields map.
 | `listTestCases` | scope (plan/suite/area) | list (id, title, steps) | 0.3 | MVP |
 | `getTestCase` | platform id | canonical TC + hash | drift detection | v3 |
 | `createWorkItem` | type, fields | id | automation backlog (2.3) | MVP (optional) |
-| `createDefect` | canonical defect | id | 3.3 | v2 |
-| `publishTestRun` | runs | run id | 3.x, G4 | v2 |
+| `createDefect` | canonical defect (status confirmed + confirmedBy) | id | 3.3 | v2 |
+| `getDefectStatus` | platform ids | id → state | 3.3, 3.5, /qa-status | v2 |
+| `updateDefect` | id, comment, optional state | ok | 3.3 retest (tester-confirmed) | v2 |
+| `publishTestRun` | runs of one cycle (TC platform ids, outcomes) | run id, result ids | G4 sync, `/qa-sync --what runs` | v2 |
 
 ## Rules for all adapters
 1. **Idempotent upserts.** If the canonical object has `externalIds.<platform>`, update;
@@ -36,3 +38,5 @@ says how fields map.
 5. **Confirm outward writes the first time** in a session (show what will be written).
 6. Respect `storage.sourceOfTruth`: when `platform`, read back from the platform before
    editing repo files and treat the platform copy as authoritative on conflicts.
+7. **Defects need a human.** `createDefect` and `updateDefect` refuse input without
+   `confirmedBy` (create) or an explicit tester confirmation from the orchestrator (update).

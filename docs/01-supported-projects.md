@@ -17,7 +17,7 @@ Detection is automatic in `/qa-init` (stage 0.1) and you confirm the result. See
 
 | Platform | Status | What it does |
 |---|---|---|
-| **Azure DevOps** (Boards + Test Plans) | ✅ MVP | Reads work items; writes acceptance criteria, gate status (tag or custom field), comments; creates requirement-based test suites and test cases linked to the story (*Tested By*). |
+| **Azure DevOps** (Boards + Test Plans) | ✅ MVP | Reads work items; writes acceptance criteria, gate status (tag or custom field), comments; creates requirement-based test suites and test cases linked to the story (*Tested By*); **v2:** publishes test run results and creates tester-confirmed Bugs with evidence. |
 | **Repo only** (no platform) | ✅ MVP | Set `storage.platform.enabled: false`. All artifacts stay as files in the repo. Useful for trials or when you don't have write access yet. |
 | **Jira + Xray** | 🔜 v2 | Design in `adapters/jira-xray/`. |
 | **GitHub Issues** | 🔜 v3 | Design in `adapters/github/`. |
@@ -48,8 +48,8 @@ Anything not recognised is still read as plain source — detection is a head st
 | Requirements → AC → risk → gaps → plan (Phase 1, G1, G2) | ✅ | — |
 | Test case design (2.1, G3) | ✅ | — |
 | Test data, automation gap, observability design (2.2–2.4) | Draft rules | Hardened in v2 |
-| Execution: manual, automation, defects, regression (Phase 3, G4) | Stubs | v2 |
-| Exploratory testing via Playwright MCP (3.2b) | Design only | v2 |
+| Execution: manual runs, defects, regression, test summary (3.2a, 3.3–3.5, G4) | ✅ v2 slice A | Automation implementation 3.1 in v4 |
+| Exploratory testing via Playwright MCP (3.2b) | Design only | v2 slice B |
 | Release verification, escape analysis, metrics (Phase 4, G5) | Stubs | v4 |
 | Gates | Advisory | Per-gate *blocking* option already in config |
 

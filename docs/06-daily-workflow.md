@@ -73,7 +73,54 @@ On approval: a requirement-based suite is created in your Test Plan and test cas
 created/updated with steps and linked to the story (*Tested By*). IDs are written back into
 the YAML files so re-syncing updates instead of duplicating.
 
-## 6. Check status any time
+## 6. Execute — Phase 3
+
+```
+/qa-execute 1234
+```
+
+- Tell it the **build** and **environment**; it checks the test plan's entry criteria and lists the
+  manual test cases to run (highest priority first).
+- **In chat:** it shows one test case at a time — steps, expected results, data, and which test
+  account role to use (e.g. "the account in `TEST_EMPLOYEE_USER`" — it never shows passwords).
+  You answer `all pass`, `step 3 fail: saved without a warning`, `blocked: env down`, and give an
+  evidence file path for failures. Each result is saved straight away as `3-execution/runs/RUN-xxx.yaml`.
+- **Offline:** `/qa-execute 1234 --sheet` writes an execution sheet you fill in; then
+  `/qa-execute 1234 --ingest`.
+- **Automated results:** `/qa-execute 1234 --import TestResults/run.trx` (JUnit XML or TRX). Tag
+  automated tests with their `TC-xxx` id to link them automatically.
+
+## 7. Defects
+
+Each failure is triaged. Only failures against an **approved AC or confirmed business rule** become
+defect drafts; a failure that rests on a provisional fact becomes a question instead, and a match
+with `known-quirks.md` is not a defect.
+
+```
+/qa-defect 1234 confirm
+```
+
+You see each draft (title, severity, expected vs actual, possible duplicates in ADO) and confirm,
+edit, reject, mark duplicate or defer. **Only confirmed defects are created** in ADO — as a Bug with
+repro steps, severity, evidence attachments, and links to the story and test case. When the
+developer resolves it: `/qa-defect 1234 retest DEF-001`.
+
+## 8. Regression, summary and G4
+
+`/qa-continue 1234` → the regression set is selected (existing automated tests first) with the
+exact commands to run; import the results with `--import`. Then the **test summary report** is
+written: exit criteria with real numbers, defects, coverage, overrides, residual risks and a
+recommendation.
+
+```
+/qa-gate G4 1234
+```
+
+Decide **GO** (approved), **GO with risks** (approved-with-risks), or **NO-GO** (rejected — back to
+execution). On GO, run results are published to the ADO Test Plan and a summary comment is posted on
+the story.
+
+## 9. Check status any time
 
 ```
 /qa-status 1234          # this item

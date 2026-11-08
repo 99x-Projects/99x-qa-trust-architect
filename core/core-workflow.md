@@ -65,13 +65,22 @@ project paths are relative to the project root.
 | | 2.3 Automation gap | `.../2.3-automation-gap.md` | `2-design/automation-gap.md` | MVP (draft) |
 | | 2.4 Observability design | `.../2.4-observability-design.md` | `2-design/observability-plan.md` | MVP (draft) |
 | | **G3 Test Design Approved** | `gates/G3-test-design-approved.md` | `gates/G3.md` | MVP |
-| 3 Execution | 3.1–3.4 | `rules/phase-3-execution/*` | `3-execution/*` | v2 |
+| 3 Execution | 3.1 Automation implementation | `rules/phase-3-execution/3.1-automation-implementation.md` | – (non-blocking stub) | v4 |
+| | 3.2a Manual execution | `.../3.2a-manual-execution.md` | `3-execution/runs/RUN-*.yaml`, `execution-log.md` | v2 |
+| | 3.2b Exploratory (Playwright MCP) | `.../3.2b-exploratory-playwright.md` | `3-execution/sessions/*` | v2 (slice B) |
+| | 3.3 Defect management | `.../3.3-defect-management.md` | `3-execution/defects/DEF-*.yaml`, `defect-log.md` | v2 |
+| | 3.4 Regression | `.../3.4-regression.md` | `3-execution/regression.md` | v2 |
+| | 3.5 Test summary report | `.../3.5-test-summary.md` | `3-execution/test-summary-report.md` | v2 |
 | | **G4 Quality Sign-off** | `gates/G4-quality-signoff.md` | `gates/G4.md` | v2 |
 | 4 Operations | 4.1–4.4 | `rules/phase-4-operations/*` | `4-operations/*` | v4 |
 | | **G5 Release Closure** | `gates/G5-release-closure.md` | `gates/G5.md` | v4 |
 
-Stages marked v2+ exist as stubs. If routing reaches one, tell the user it is not yet
-implemented, record `status: not-implemented` in `qa-state.md`, and stop.
+Stages not yet implemented exist as stubs. If routing reaches one, tell the user, record
+`status: not-implemented` in `qa-state.md`, and stop — unless its rule file marks it
+**non-blocking** (3.1, and 3.2b until slice B), in which case continue with the next stage.
+
+Phase 3 stages are human-driven: the tester executes (`/qa-execute`) and confirms defects
+(`/qa-defect`); 3.3 runs continuously alongside 3.2a/3.4.
 
 ## 3. Stage execution loop
 
@@ -113,6 +122,10 @@ When the user says questions are answered (or on `/qa-continue`):
 | Gap | `GAP-01` | per work item |
 | Test case | `TC-001` | per work item (repo); platform ID in `externalIds` |
 | Charter (v2) | `CH-01` | per work item |
+| Execution cycle | `CY-01` | per work item |
+| Test run | `RUN-001` | per work item (`3-execution/runs/`) |
+| Defect | `DEF-001` | per work item (`3-execution/defects/`); platform ID in `externalIds`, tag `qa-def:<workItemKey>/DEF-001` |
+| Data set | `DS-01` | per work item |
 | Business rule | `BR-001` | project (domain) |
 | Journey | `J-01` | project (domain) |
 | Persona / role | `ROLE-<slug>` | project (domain) |
@@ -121,7 +134,7 @@ When the user says questions are answered (or on `/qa-continue`):
 | Domain change proposal | `DCP-0001` | project (domain) |
 | Discrepancy | `DISC-001` | project (domain) |
 
-Trace chain: `REQ → AC → TC → (run) → defect`, plus `AC ↔ BR`, `TC ↔ BR`, `R → TC`,
+Trace chain: `REQ → AC → TC → RUN → DEF`, plus `AC ↔ BR`, `TC ↔ BR`, `R → TC`,
 `GAP → (AC|TC|backlog item)`, `F ↔ (REQ, TC, code paths)`.
 
 ## 6. Tiers
@@ -152,7 +165,9 @@ and integration status.
 | 2.1–2.2 | `test-designer` |
 | 2.3 | `automation-analyst` |
 | Platform sync | `sync-agent` |
-| 3.2b (v2) | `exploratory-tester` |
+| 3.2a prep/ingest, 3.3 triage & drafting, 3.4, 3.5 | `execution-analyst` |
+| 3.2a execution, 3.3 confirmation | inline (`/qa-execute`, `/qa-defect`) — a human executes/confirms |
+| 3.2b (v2, slice B) | `exploratory-tester` |
 
 When delegating, pass in the prompt: `FRAMEWORK_ROOT`, project root, resolved `ITEM_DIR`,
 `DOMAIN_DIR`, the stage ID(s), tier, and the config excerpt the stage needs. Agents write

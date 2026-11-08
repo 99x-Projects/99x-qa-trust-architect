@@ -34,6 +34,9 @@ platform:
     workItemKeyPrefix: "ADO"      # folder key → ADO-1234
     gateStatusField: tag          # tag | custom-field
     customFieldRef: null          # e.g. "Custom.QAGate" when gateStatusField = custom-field
+    defectType: "Bug"             # work item type for defects ("Issue" in the Basic process)
+    defectLinkToRequirement: related   # related | none — Bug ↔ story link
+    copyAreaIteration: true       # new bugs inherit Area/Iteration from the story
   # jira-xray: { site, projectKey, xrayDeployment: cloud|server, ... }   # v2
   # github:    { owner, repo }                                            # v3
 
@@ -106,7 +109,24 @@ integrations:
     gateAlignment: false          # v2
     domainSync: dcp
 
-# ─── Execution (v2) ─────────────────────────────────────────────────────
+# ─── Execution: manual runs, defects, regression (v2) ───────────────────
+execution:
+  defaultEnvironment: test        # must be in domain/environments.yaml with agentsAllowed or used by testers
+  evidencePath: "3-execution/evidence"   # relative to the work item folder
+  manualMode: ask                 # interactive (step by step in chat) | sheet (offline file) | ask
+  publishRuns: on-gate            # on-gate (G4) | after-session | manual (/qa-sync --what runs)
+  flakyReruns: 1                  # automated failures re-run this many times before triage as product defect
+  defects:
+    autoDraft: true               # draft DEF-xxx for each failed run (never created without confirmation)
+    duplicateCheck: true          # search the platform for similar open defects first
+    requireReproduction: false    # true → a failure must be reproduced once before confirmation
+    attachEvidence: true          # upload screenshots/logs as attachments
+    refreshStatusOnStatus: true   # /qa-status reads defect states from the platform
+  results:
+    formats: [junit, trx]         # automated result files the importer understands
+    paths: ["**/TestResults/*.trx", "**/junit*.xml", "**/test-results/*.xml"]
+
+# ─── Exploratory testing via Playwright MCP (v2) ────────────────────────
 exploratory:
   mcp: playwright
   environments:

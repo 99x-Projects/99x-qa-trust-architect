@@ -1,0 +1,30 @@
+# Test run — one execution of one test. Schema: schemas/test-run.schema.json
+# File: ITEM_DIR/3-execution/runs/RUN-001.yaml
+id: RUN-001
+caseId: TC-001                  # or testRef for an existing automated test
+testRef: null                   # e.g. "tests/LeaveTests.cs::RejectsOver20Days"
+set: planned                    # planned | regression | retest | smoke
+cycle: CY-01
+result: failed                  # passed | failed | blocked | skipped | not-run
+mode: manual                    # manual | automated | exploratory
+executedBy: "{{tester}}"
+executedAt: "{{isoDateTime}}"
+durationMinutes: 6
+environment: test
+build: "{{build/version/commit}}"
+dataSet: DS-01
+exampleRow: 2                   # Examples row executed (null = all)
+stepResults:
+  - { step: 1, result: passed }
+  - { step: 2, result: failed, actual: "Request for 21 days was accepted" }
+actual: "Request for 21 days was accepted; no validation message shown"
+blockedReason: null
+failureClass: untriaged         # product-defect | test-defect | environment | data | flaky | expected-quirk | provisional-oracle | untriaged
+evidence:
+  - 3-execution/evidence/RUN-001/step2.png
+defects: []                     # DEF-xxx once drafted
+retestOf: null
+source: null                    # result file for automated runs
+notes: ""
+externalIds: {}                 # { azure-devops: { runId: 77, resultId: 100000 } }
+published: false

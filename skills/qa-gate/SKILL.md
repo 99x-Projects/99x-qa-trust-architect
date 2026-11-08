@@ -12,7 +12,10 @@ Gates must run **in this conversation** (never delegate the decision).
 
 1. Read `core/core-workflow.md` §0–1, `core/gate-protocol.md`, and the gate checklist
    `gates/<Gx>-*.md`. G0 is project-level; G1–G5 need a work item (default: most recent, confirm).
-2. G4/G5 → not implemented in MVP: say so and stop.
+2. G5 → not implemented yet (v4): say so and stop. **G4:** if `3-execution/test-summary-report.md`
+   is missing or older than the latest run/defect file, offer to (re)generate it first (delegate
+   `summary` to `qa-trust-architect:execution-analyst`); refresh defect states from the platform.
+   Use the decision wording GO / GO with risks / NO-GO from the G4 checklist.
 3. **Approver:** check `gates.approvers` (default any tester). Ask for / confirm the approver's
    name (suggest `git config user.name`). If restricted and the user isn't listed → advisory:
    warn and allow with recorded override; blocking: stop.

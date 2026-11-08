@@ -61,3 +61,36 @@ severity:                          # canonical → Microsoft.VSTS.Common.Severit
   Sev2: "2 - High"
   Sev3: "3 - Medium"
   Sev4: "4 - Low"
+
+defect:
+  type: "Bug"                      # overridden by platform.azure-devops.defectType
+  fields:
+    title: System.Title            # "DEF-001 <title>"
+    reproSteps: Microsoft.VSTS.TCM.ReproSteps      # HTML
+    systemInfo: Microsoft.VSTS.TCM.SystemInfo      # environment, build
+    severity: Microsoft.VSTS.Common.Severity        # via severity map above
+    priority: Microsoft.VSTS.Common.Priority
+    tags: System.Tags              # qa-trust; qa-def:<key>/<DEF-id>; feature ids
+    areaPath: System.AreaPath      # copied from story when copyAreaIteration
+    iteration: System.IterationPath
+  links:
+    requirement: System.LinkTypes.Related
+    testCase: Microsoft.VSTS.Common.TestedBy-Forward
+    attachment: AttachedFile
+  stateMap:                        # ADO state → canonical status hint
+    New: logged
+    Active: logged
+    Committed: logged
+    Approved: logged
+    Resolved: fixed
+    Done: fixed
+    Closed: closed
+    Removed: rejected
+
+testRun:
+  outcomeMap:
+    passed: Passed
+    failed: Failed
+    blocked: Blocked
+    skipped: NotExecuted
+    not-run: NotExecuted

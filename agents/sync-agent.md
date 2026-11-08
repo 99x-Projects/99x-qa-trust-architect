@@ -26,6 +26,15 @@ work item platform.
 6. **Drift check** (on `/qa-sync --check`, v3 full): compare stored hash with platform
    content; report differences; resolve per `storage.sourceOfTruth` or ask.
 
+## Phase 3 operations
+- **createDefect:** only for `DEF-*.yaml` with `status: confirmed` **and** `confirmedBy`. Refuse
+  drafts. Write the defect as JSON to a temp file, call the adapter (ADO: `create-bug`), store
+  `externalIds`, `contentHash`, `status: logged`; audit `DEFECT-LOGGED`.
+- **publishTestRun:** group unpublished runs by cycle; only runs whose TC has a platform ID;
+  call the adapter (ADO: `publish-run`); set `published: true` and run/result IDs on each run.
+- **getDefectStatus:** read-only; return id → state for the orchestrator/analyst.
+- **Close / re-activate / comment on a defect:** only when the orchestrator says the tester confirmed it.
+
 ## Hard rules
 - Never print or persist credentials.
 - On failure: stop that operation, keep repo files unchanged except IDs already created,

@@ -28,8 +28,13 @@ process. It runs at the end of stage 1.1 and writes the decision to `qa-state.md
 | 2.3 Automation gap | – | ✔ | ✔ |
 | 2.4 Observability | – | if user-facing or integration | ✔ |
 | **G3** | ✔ | ✔ | ✔ |
-| 3.x Execution (v2) | 3.2a, 3.3 | all | all |
-| **G4** (v2) | ✔ | ✔ | ✔ |
+| 3.1 Automation implementation (v4) | – | non-blocking stub | non-blocking stub |
+| 3.2a Manual execution | ✔ | ✔ | ✔ |
+| 3.2b Exploratory (slice B) | – | high-risk charters | ✔ |
+| 3.3 Defect management | ✔ | ✔ | ✔ |
+| 3.4 Regression | impacted feature only | scope + adjacent | + two hops, hotspots |
+| 3.5 Test summary report | lite (exit criteria + defects) | ✔ | ✔ |
+| **G4** | ✔ | ✔ | ✔ (PO recommended) |
 | 4.x Operations (v4) | – | 4.1 | all |
 
 ## 3. Escalation / de-escalation signals

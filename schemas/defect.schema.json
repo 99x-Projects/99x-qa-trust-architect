@@ -1,16 +1,23 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "qa-trust-architect/defect.schema.json",
-  "title": "Defect (canonical, v2)",
+  "title": "Defect (canonical)",
+  "description": "Stored as ITEM_DIR/3-execution/defects/DEF-xxx.yaml. Created on the platform only after a tester confirms it.",
   "type": "object",
-  "required": ["title", "stepsToReproduce", "expected", "actual", "severity"],
+  "required": ["id", "title", "status", "stepsToReproduce", "expected", "actual", "severity", "traces"],
   "properties": {
-    "title": { "type": "string" },
-    "stepsToReproduce": { "type": "array", "items": { "type": "string" } },
+    "id": { "type": "string", "pattern": "^DEF-[0-9]{3,}$" },
+    "workItemKey": { "type": "string" },
+    "title": { "type": "string", "maxLength": 200 },
+    "status": {
+      "enum": ["draft", "confirmed", "logged", "fixed", "retest-passed", "retest-failed", "closed", "rejected", "duplicate", "deferred", "accepted"],
+      "description": "draft → confirmed (tester) → logged (on platform) → fixed → retest-passed/failed → closed. rejected = not a defect; accepted = won't fix, risk accepted"
+    },
+    "stepsToReproduce": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
     "expected": { "type": "string" },
     "actual": { "type": "string" },
     "severity": { "enum": ["Sev1", "Sev2", "Sev3", "Sev4"] },
-    "priority": { "type": ["string", "integer", "null"] },
+    "priority": { "type": ["integer", "null"], "minimum": 1, "maximum": 4 },
     "environment": { "type": "string" },
     "build": { "type": "string" },
     "evidence": { "type": "array", "items": { "type": "string" } },
@@ -18,17 +25,37 @@
       "type": "object",
       "properties": {
         "workItem": { "type": "string" },
+        "runs": { "type": "array", "items": { "type": "string" } },
         "testCases": { "type": "array", "items": { "type": "string" } },
         "acceptanceCriteria": { "type": "array", "items": { "type": "string" } },
         "rules": { "type": "array", "items": { "type": "string" } },
-        "session": { "type": "string" }
+        "features": { "type": "array", "items": { "type": "string" } },
+        "session": { "type": ["string", "null"] }
       }
     },
     "oracleBasis": {
-      "enum": ["confirmed", "documented-verified"],
-      "description": "Defects may only be raised against oracle-eligible facts"
+      "enum": ["confirmed", "documented-verified", "acceptance-criterion"],
+      "description": "Why the expected result is authoritative. Defects may only be raised against oracle-eligible facts or approved AC."
     },
-    "confirmedBy": { "type": "string", "description": "Tester who confirmed creation" },
-    "externalIds": { "type": "object" }
+    "checks": {
+      "type": "object",
+      "description": "Pre-confirmation checks done by the execution-analyst",
+      "properties": {
+        "oracle": { "enum": ["ok", "provisional", "disputed"] },
+        "knownQuirk": { "type": ["string", "null"], "description": "Matching known-quirks entry, if any" },
+        "possibleDuplicates": { "type": "array", "items": { "type": "string" } },
+        "reproduced": { "type": "boolean" }
+      }
+    },
+    "confirmedBy": { "type": ["string", "null"], "description": "Tester who confirmed creation" },
+    "confirmedAt": { "type": ["string", "null"], "format": "date-time" },
+    "resolution": { "type": ["string", "null"], "description": "Reason for rejected/duplicate/deferred/accepted, or fix note" },
+    "acceptedRisk": { "type": ["string", "null"], "description": "Named risk + who accepted (status accepted/deferred)" },
+    "platformState": { "type": ["string", "null"], "description": "Last state read from the platform (e.g. Active, Resolved)" },
+    "retests": { "type": "array", "items": { "type": "string" }, "description": "RUN ids of retests" },
+    "externalIds": { "type": "object" },
+    "contentHash": { "type": ["string", "null"] },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" }
   }
 }

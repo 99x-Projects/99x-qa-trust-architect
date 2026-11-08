@@ -13,6 +13,10 @@ Read-only (except refreshing stale flags). Read `core/core-workflow.md` §1 and 
 **Work item view:** tier (+reason), stage table, gate table (incl. overridden/stale), questions
 open/blocking, AC coverage (ACs with ≥ 1 TC, from `test-case-index.md`), provisional AC/TC count,
 pending DCPs raised by the item, `followUps`, sync table summary, next step.
+In Phase 3 also: current cycle (build/env), executed/passed/failed/blocked of planned TCs,
+regression pass rate, untriaged failures, defects by status and severity (drafts awaiting
+confirmation highlighted; refresh platform states first if `execution.defects.refreshStatusOnStatus`),
+unpublished runs.
 
 **Project view** (`--project` or no active item): G0 status, `domainVersion`, features
 skeleton/deep, rules by status, open discrepancies, pending DCPs by level with age (flag

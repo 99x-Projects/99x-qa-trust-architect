@@ -151,6 +151,33 @@
         }
       }
     },
+    "execution": {
+      "type": "object",
+      "properties": {
+        "defaultEnvironment": { "type": "string" },
+        "evidencePath": { "type": "string", "default": "3-execution/evidence" },
+        "manualMode": { "enum": ["interactive", "sheet", "ask"] },
+        "publishRuns": { "enum": ["on-gate", "after-session", "manual"] },
+        "flakyReruns": { "type": "integer", "minimum": 0 },
+        "defects": {
+          "type": "object",
+          "properties": {
+            "autoDraft": { "type": "boolean" },
+            "duplicateCheck": { "type": "boolean" },
+            "requireReproduction": { "type": "boolean" },
+            "attachEvidence": { "type": "boolean" },
+            "refreshStatusOnStatus": { "type": "boolean" }
+          }
+        },
+        "results": {
+          "type": "object",
+          "properties": {
+            "formats": { "type": "array", "items": { "enum": ["junit", "trx"] } },
+            "paths": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
     "exploratory": { "type": "object" }
   }
 }

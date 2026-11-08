@@ -49,6 +49,7 @@ For a work item:
 | test-designer (2.1–2.2) | glossary, rules, entities, roles, journeys, nfr, environments, quirks |
 | automation-analyst (2.3) | features, existingTests, appmap |
 | observability (2.4) | integrations, nfr, features |
+| execution-analyst (3.2a–3.5) | rules, quirks, roles, features, environments, existingTests, hotspots, integrations, discrepancies, pendingDcps |
 | exploratory-tester (v2) | appmap, journeys, roles, rules, quirks, environments |
 | domain-analyst | everything (it maintains the context) |
 

@@ -32,7 +32,9 @@ You ──/qa-start──► orchestrator (main session) ──► requirement-a
 | `/qa-gate <G0…G5> [id]` | Builds the gate pack (checklist with evidence, open questions, pending DCPs), lets you interrogate it, records the decision, triggers sync | At each gate |
 | `/qa-status [id \| --project]` | Item: tier, stages, gates, open questions, AC coverage, sync state. Project: G0, domain version, pending DCPs, stale facts, AI-DLC status | "Where are we?" |
 | `/qa-sync [id] [--what ac\|tests\|gates\|all] [--check]` | Pushes artifacts to the platform on demand; `--check` reports drift | When `syncMode` isn't `on-gate`, or to re-push |
-| `/qa-explore …` | *(v2)* Exploratory testing via Playwright MCP | Not yet implemented |
+| `/qa-execute [id] [--tc …] [--set planned\|regression\|retest] [--sheet \| --ingest] [--import <file>]` | Opens a test cycle (build + environment, entry criteria), runs test cases step by step in chat or via an offline execution sheet, imports JUnit/TRX results, records `RUN-xxx` files with evidence | Phase 3, after G3 |
+| `/qa-defect [id] list \| confirm \| reject \| duplicate \| defer \| accept \| refresh \| retest` | Reviews drafted defects; **you confirm** before anything is created in ADO; refreshes bug states; retests fixes | Phase 3 |
+| `/qa-explore …` | *(v2 slice B)* Exploratory testing via Playwright MCP | Not yet implemented |
 
 ## Agents
 
@@ -81,7 +83,23 @@ You ──/qa-start──► orchestrator (main session) ──► requirement-a
   acceptance criteria field, gate status tag/field, comments, requirement-based suite, test
   cases with steps, *Tested By* links; stores platform IDs and content hashes back in the repo
   files; reports drift. Overridden gates don't sync unless you ask.
+- **v2:** creates **confirmed** defects only (Bug with repro steps, severity, evidence attachments,
+  links to story and test cases; idempotent via a `qa-def:` tag), publishes test runs to Test Plans,
+  reads defect states.
 - **Never** prints or stores credentials.
+
+### execution-analyst — *turns execution into evidence*
+- **Stages:** 3.2a (cycle preparation, sheet ingestion), 3.3 (triage, defect drafting), 3.4 regression, 3.5 test summary.
+- **Does:** checks entry criteria and builds the execution list; parses filled execution sheets and
+  JUnit/TRX result files (`scripts/import_results.py`) into run records; classifies every failure
+  (product defect, test defect, environment, data, flaky, known quirk, provisional oracle); drafts
+  defects with an **oracle check** (only approved AC / confirmed rules can fail a test), known-quirk
+  and duplicate checks; selects regression from the risk assessment and feature-test map; writes the
+  test summary report with exit criteria computed from the runs and a GO / GO with risks / NO-GO
+  recommendation.
+- **Never** creates or confirms defects, and never decides G4.
+- **Output:** `3-execution/runs/`, `execution-log.md`, `defects/`, `defect-log.md`, `regression.md`,
+  `test-summary-report.md`. **Gate:** G4.
 
 ### exploratory-tester — *(v2)*
 - **Stage:** 3.2b. Charter-based exploratory / focused testing of the web app through the
@@ -103,7 +121,12 @@ You ──/qa-start──► orchestrator (main session) ──► requirement-a
 | 2.3 Automation gap | automation-analyst | |
 | 2.4 Observability design | risk-gap-analyst | **G3 Test Design Approved** |
 | Sync after any gate | sync-agent | |
-| 3.x Execution | v2 (exploratory-tester for 3.2b) | G4 (v2) |
+| 3.1 Automation implementation | v4 (non-blocking stub) | |
+| 3.2a Manual execution | you, via `/qa-execute` (execution-analyst prepares/ingests) | |
+| 3.2b Exploratory | exploratory-tester (v2 slice B) | |
+| 3.3 Defects | execution-analyst drafts → **you confirm** (`/qa-defect`) → sync-agent creates | |
+| 3.4 Regression | execution-analyst + you (run/import) | |
+| 3.5 Test summary | execution-analyst | **G4 Quality Sign-off** |
 | 4.x Operations | v4 | G5 (v4) |
 
 Not every stage runs for every item — the tier decides (`core/routing-rules.md`):
