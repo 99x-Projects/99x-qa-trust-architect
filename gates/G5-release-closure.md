@@ -1,5 +1,7 @@
 # G5 — Release Closure  *(planned: v4)*
 
+> Planned design: `docs/07-planned-automation-and-observability.md`.
+
 **When:** after Phase 4. **Record:** `ITEM_DIR/gates/G5.md`.
 
 ## Checklist (draft)

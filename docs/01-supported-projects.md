@@ -48,9 +48,9 @@ Anything not recognised is still read as plain source — detection is a head st
 | Requirements → AC → risk → gaps → plan (Phase 1, G1, G2) | ✅ | — |
 | Test case design (2.1, G3) | ✅ | — |
 | Test data, automation gap, observability design (2.2–2.4) | Draft rules | ✅ v2 slice C: data sets with privacy classification and readiness; evidence-based automation reuse, scoring, placement and backlog; signals, alerts, SLOs and pre-release OBS checks |
-| Execution: manual runs, defects, regression, test summary (3.2a, 3.3–3.5, G4) | ✅ v2 slice A | Automation implementation 3.1 in v4 |
+| Execution: manual runs, defects, regression, test summary (3.2a, 3.3–3.5, G4) | ✅ v2 slice A | Automation script generator 3.1 in v4 — [design](07-planned-automation-and-observability.md) |
 | Exploratory testing via Playwright MCP (3.2b) | Design only | ✅ v2 slice B: charters; autonomous, guided and pair sessions; bug re-verification; smoke |
-| Release verification, escape analysis, metrics (Phase 4, G5) | Stubs | v4 |
+| Release verification, escape analysis, metrics (Phase 4, G5) | Stubs | v4: observability agents — [design](07-planned-automation-and-observability.md) |
 | Gates | Advisory | Per-gate *blocking* option already in config |
 | Guard hooks | Planned | ✅ v2 slice F: secret scan, secret-file access, domain write guard, browser guard, automatic stale gates |
 

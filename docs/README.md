@@ -9,7 +9,8 @@ Start here, in this order:
 | 3 | [Credentials & test accounts](03-credentials-and-test-accounts.md) | How do I configure the Azure DevOps PAT and test usernames/passwords safely? |
 | 4 | [Existing projects](04-existing-projects.md) | How do I adopt it on a project that already has code, tests — with or without written requirements, or with AI-DLC? |
 | 5 | [Agents & commands](05-agents-and-commands.md) | What does each `/qa-*` command and each specialist agent do? |
-| 6 | [Daily workflow](06-daily-workflow.md) | How does a tester take a story from intake to approved test cases? |
+| 6 | [Daily workflow](06-daily-workflow.md) | How does a tester take a story from intake to G4 sign-off? |
+| 7 | [Planned: automation & observability](07-planned-automation-and-observability.md) | How will the v4 automation script generator and observability agents work? |
 
 Reference material (for people extending the framework) lives next to the code:
 `core/` (lifecycle engine), `rules/` (one file per stage), `gates/`, `templates/`,

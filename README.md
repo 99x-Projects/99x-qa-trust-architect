@@ -58,7 +58,8 @@ PHASE 4  OPERATIONS  4.1 Release verification · 4.2 Observability validation ·
 | [Credentials & test accounts](docs/03-credentials-and-test-accounts.md) | Azure DevOps PAT, `.env`, MCP/CLI auth, test usernames & passwords |
 | [Existing projects](docs/04-existing-projects.md) | With docs, without docs, with AI-DLC; keeping the domain current |
 | [Agents & commands](docs/05-agents-and-commands.md) | Every `/qa-*` command and specialist agent, stage-to-agent map, tiers |
-| [Daily workflow](docs/06-daily-workflow.md) | One story from `/qa-start` to approved test cases in ADO |
+| [Daily workflow](docs/06-daily-workflow.md) | One story from `/qa-start` to G4 sign-off |
+| [Planned: automation & observability](docs/07-planned-automation-and-observability.md) | Design of the v4 automation script generator (3.1) and observability agents (Phase 4, G5) |
 
 ## Repository layout
 
