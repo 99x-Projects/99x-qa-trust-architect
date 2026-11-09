@@ -52,6 +52,7 @@ Anything not recognised is still read as plain source — detection is a head st
 | Exploratory testing via Playwright MCP (3.2b) | Design only | ✅ v2 slice B: charters; autonomous, guided and pair sessions; bug re-verification; smoke |
 | Release verification, escape analysis, metrics (Phase 4, G5) | Stubs | v4 |
 | Gates | Advisory | Per-gate *blocking* option already in config |
+| Guard hooks | Planned | ✅ v2 slice F: secret scan, secret-file access, domain write guard, browser guard, automatic stale gates |
 
 ## Not supported (by design)
 

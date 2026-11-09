@@ -218,6 +218,30 @@
         },
         "defectCreation": { "const": "confirm" }
       }
+    },
+    "guards": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "secretScan": {
+          "type": "object",
+          "properties": {
+            "mode": { "enum": ["block", "warn", "off"] },
+            "envValues": { "type": "boolean" },
+            "allow": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "secretFiles": { "type": "object", "properties": { "mode": { "enum": ["block", "warn", "off"] } } },
+        "domainWrites": { "type": "object", "properties": { "mode": { "enum": ["ask", "warn", "block", "off"] } } },
+        "gateStale": {
+          "type": "object",
+          "properties": {
+            "mode": { "enum": ["mark", "warn", "off"] },
+            "cover": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "string" } } }
+          }
+        },
+        "browser": { "type": "object", "properties": { "mode": { "enum": ["enforce", "warn", "off"] } } }
+      }
     }
   }
 }

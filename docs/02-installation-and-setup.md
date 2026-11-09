@@ -6,7 +6,7 @@
 |---|---|---|
 | **Claude Code** | Everything | `claude --version` |
 | **Git** | Detecting project history, tracking artifacts | `git --version` |
-| **Python 3.8+** | Azure DevOps test case helper (`adapters/azure-devops/scripts/ado_testcase.py`, standard library only) | `python --version` |
+| **Python 3.8+** | Azure DevOps test case helper (`adapters/azure-devops/scripts/ado_testcase.py`) and the guard hooks (`hooks/qa_guard.py`) — standard library only | `python --version` |
 | **Node.js 18+** (`npx`) | Azure DevOps MCP server; Playwright MCP server (exploratory testing, live crawl) | `npx --version` |
 | Azure CLI + `azure-devops` extension *(optional)* | Fallback route for some ADO operations | `az devops -h` |
 | Azure DevOps access | Read work items; write work items and Test Plans | A PAT — see [page 3](03-credentials-and-test-accounts.md) |
@@ -115,6 +115,7 @@ example is `config/qa-trust.config.example.yaml`; the schema is
 | `routing.rules` | bugs → light, epics/payments/PII → comprehensive | Your own tier rules |
 | `domain.discovery.mode` | `auto` | Force `docs-led` or `evidence-led` |
 | `domain.owners` | any tester | e.g. `{ business-rules: ["product-owner"] }` |
+| `guards.*.mode` | secret scan/files block, domain writes ask, gate stale mark, browser enforce | `warn` or `off` per guard; `guards.secretScan.allow` for false positives — see [`hooks/README.md`](../hooks/README.md) |
 
 ## Troubleshooting
 
@@ -127,3 +128,7 @@ example is `config/qa-trust.config.example.yaml`; the schema is
 | `/qa-explore` says the browser tools are missing | `/mcp` → check `playwright` is connected; run `npx playwright install chromium`; restart Claude Code. |
 | Exploratory session stops at a login page | Strategy `manual`: log in in the browser window when asked. `storage-state`: the recorded session expired — record it again. |
 | `.env` warning: not gitignored | Add `.env` to the project's `.gitignore` — `/qa-init` offers to do this. |
+| A write is blocked with "qa-guard: Possible secret …" | Replace the value with a reference (`env:NAME`). If it is not a secret, add it to `guards.secretScan.allow`. |
+| "qa-guard: … baselined domain context" prompt | Domain facts change through DCPs after G0 (`/qa-domain`). Approve only an intentional direct edit. |
+| A gate suddenly shows `stale` | An artifact it covers changed after approval. `/qa-gate Gx --reaffirm` if the change is trivial, otherwise re-run the gate. |
+| "guard hooks are inactive" | Python 3.8+ not on PATH for the shell Claude Code uses. Install it or add it to PATH. |

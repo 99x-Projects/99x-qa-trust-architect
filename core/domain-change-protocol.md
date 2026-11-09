@@ -66,6 +66,9 @@ Two conflicting DCPs cannot both be accepted; present them side by side.
 
 ## 7. On acceptance
 
+0. Open the **apply window** so the domain write guard allows the edit:
+   `python <FRAMEWORK_ROOT>/hooks/qa_guard.py dcp-window open DCP-0007,DCP-0008` (30 minutes by
+   default); close it when done: `... dcp-window close`. Auto-level DCPs use the same window.
 1. Apply the change to the domain file. Update the fact's `status`, `sources`,
    `lastVerified`, `confidence`.
 2. **Impact propagation**: find artifacts referencing the fact ID (test cases `traces.rules`,

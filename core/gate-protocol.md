@@ -49,6 +49,8 @@ gate approval never auto-approves DCPs. Bulk accept is allowed if the approver s
 ### Step 4 — Record
 1. Write `gates/Gx.md` from `templates/gate-record.md` (checklist results, decision,
    approver, timestamp ISO-8601, accepted risks, domain context version, artifact hashes).
+   Produce the `artifacts:` list with `python <FRAMEWORK_ROOT>/hooks/qa_guard.py hash <ITEM_DIR> Gx`
+   (canonical sha256 — ignores sync bookkeeping keys `externalIds`, `contentHash`, `published`).
 2. Append to `audit.md`: `GATE Gx <decision> by <name> — <one-line reason>`.
 3. Update `qa-state.md` gate table.
 4. If platform enabled: set gate status via adapter `setGateStatus(item, "Gx", decision)`
@@ -67,6 +69,17 @@ gate approval never auto-approves DCPs. Bulk accept is allowed if the approver s
 
 ## 4. Re-opening a gate
 
-If an artifact covered by an approved gate changes materially (hash differs and the
-change is not a typo), mark the gate `stale` in `qa-state.md` and tell the user. The
-next gate pack lists stale earlier gates.
+If an artifact covered by an `approved` / `approved-with-risks` gate changes, the gate becomes
+`stale`. The **gate-stale hook** (`hooks/qa_guard.py`, `guards.gateStale`) does this automatically
+after every write: it compares the file's canonical hash with the gate record (or, for files not in
+the record, the gate's default coverage — G1 requirement/analysis/AC, G2 risk/gap/plan, G3
+`2-design/`, G4 summary + runs), sets the gate row to `stale` in `qa-state.md`, appends
+`GATE Gx stale (was …)` to `audit.md`, and tells you. Without hooks, do the same by hand.
+
+Then tell the user. Two ways out:
+- **Re-affirm** (`/qa-gate Gx --reaffirm`) — the change is not material (typo, formatting): the
+  approver looks at the change, the previous decision is restored, the record's hashes are
+  refreshed, audit `GATE Gx reaffirmed by <name> — <reason>`.
+- **Re-run the gate** — material change: full read → analyse → decide → record.
+
+The next gate pack and the G4 summary list stale and re-affirmed gates.

@@ -1,3 +1,21 @@
 {
-  "hooks": {}
+  "description": "QA Trust Architect guards: secret scan, secret-file access, domain write guard, browser environment/action guard, gate-stale detector. Active only in projects with qa-trust.config.yaml.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit|Read|Grep|Bash|PowerShell|mcp__.*playwright.*__browser_.*",
+        "hooks": [
+          { "type": "command", "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/run-guard.sh\" pre", "timeout": 15 }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+        "hooks": [
+          { "type": "command", "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/run-guard.sh\" post", "timeout": 15 }
+        ]
+      }
+    ]
+  }
 }

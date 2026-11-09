@@ -41,7 +41,7 @@ offer to add a question to `PROJECT_DIR/questions.md`.
 3. Ask the user: accept / reject (reason) / defer.
 
 ## accept / reject
-Apply per `domain-change-protocol.md` §7 (on accept: update file, propagate `needs-review`
+Apply per `domain-change-protocol.md` §7 (open the DCP apply window first and close it after; on accept: update file, propagate `needs-review`
 flags, bump `domainVersion` minor once per batch, archive DCP, audit, optional platform
 notification via sync-agent). Approver = the current user (confirm name once per session).
 Respect `domain.owners` for critical levels: if an owner is configured and the user is not

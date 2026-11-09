@@ -196,6 +196,12 @@ opens them.
 - Accounts without MFA, or with a test-friendly MFA method agreed with your security team.
 - Rotate passwords in `.env` when the environment is refreshed.
 
+### Enforced by guard hooks
+
+The rules above are also enforced by the plugin's guard hooks (`hooks/README.md`): writing a
+secret into any file, opening or printing `.env` / `.auth/`, typing into a password field, and
+navigating to production are blocked; unknown sites and blocked actions ask you first.
+
 ## Checklist
 
 - [ ] `.env` exists in the project under test and `git check-ignore .env` prints `.env`
@@ -204,3 +210,4 @@ opens them.
 - [ ] `ADO_ORG` is set in the shell (or `.claude/settings.local.json`) for the MCP server
 - [ ] `environments.yaml` contains only `env:` references, no real usernames/passwords
 - [ ] Production has `agentsAllowed: false`
+- [ ] `python <plugin>/hooks/qa_guard.py status` (from the project root) shows the guards active

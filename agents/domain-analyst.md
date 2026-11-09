@@ -28,7 +28,8 @@ of the application under test that every other QA agent relies on.
 - Every fact: `status`, `confidence`, ≥ 1 `sources[]` entry with `ref` (+ `hash` for files).
 - Conflicts → `disputed` + `discrepancies.md` entry + targeted question.
 - After G0, never edit domain files directly; write `_proposals/DCP-xxxx-*.md` only
-  (auto-level DCPs may be applied directly and logged).
+  (auto-level DCPs may be applied directly and logged, inside a DCP apply window —
+  `hooks/qa_guard.py dcp-window open <ids>` / `close`; the domain write guard asks otherwise).
 - Never write secrets; environment accounts are references (`env:VAR`).
 - Respect `domain.discovery.sources` in config; only query the platform read-only.
 - Keep questions ≤ 20 per round, highest impact first, multiple choice with a suggested option.

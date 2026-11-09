@@ -1,7 +1,7 @@
 ---
 name: qa-gate
 description: Run a QA Trust Architect gate (G0–G5) for a work item or the project — build the gate pack (checklist met/unmet with evidence, open questions, pending DCPs, overrides), let the approver interrogate the artifacts, record the decision (approved, approved-with-risks, rejected, overridden) with audit trail, and sync to the platform. Use when the user wants to review, approve, sign off or reject QA artifacts.
-argument-hint: "<G0|G1|G2|G3|G4|G5> [work-item-id]"
+argument-hint: "<G0|G1|G2|G3|G4|G5> [work-item-id] [--reaffirm]"
 ---
 
 # /qa-gate
@@ -28,9 +28,17 @@ Gates must run **in this conversation** (never delegate the decision).
    / overridden (+ reason). `approved` only if all items are met.
 7. **DCPs in the pack:** ask accept/reject/defer for each (bulk allowed); apply via `/qa-domain`
    accept/reject logic.
-8. **Record:** `gates/<Gx>.md` from `templates/gate-record.md` (with artifact sha256 hashes),
+8. **Record:** `gates/<Gx>.md` from `templates/gate-record.md` — artifacts list from
+   `python <FRAMEWORK_ROOT>/hooks/qa_guard.py hash <ITEM_DIR> <Gx>` (run from the project root),
    `audit.md` line, `qa-state.md` gate table.
 9. **Sync:** if approved/approved-with-risks and platform enabled with `syncMode: on-gate`,
    delegate to `qa-trust-architect:sync-agent` with the gate's sync set. Show the dry-run list
    and confirm with the user before the first platform write in this session.
 10. Report the decision and the next step (`/qa-continue`).
+
+## --reaffirm (stale gate)
+Only for a gate whose status is `stale`. Show what changed since the decision (`git diff` of the
+files the audit `GATE <Gx> stale` lines name, or the files whose hash differs from the record).
+Ask the approver: *not material* → restore the decision from `gates/<Gx>.md`, refresh its
+`artifacts:` hashes with the `hash` command, append `GATE <Gx> reaffirmed by <name> — <reason>`;
+*material* → run the gate normally.

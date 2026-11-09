@@ -9,7 +9,8 @@ Events: `STAGE-START`, `STAGE-DONE`, `QUESTION-RAISED`, `QUESTION-ANSWERED`,
 `DCP-RAISED`, `DCP-ACCEPTED`, `DCP-REJECTED`, `DCP-AUTO-ACCEPTED`, `SYNC`, `SYNC-DRIFT`,
 `INTEGRATION`, `CYCLE-OPENED`, `RUN-RECORDED`, `RUNS-IMPORTED`, `DEFECT-DRAFTED`, `DEFECT-CONFIRMED`,
 `DEFECT-LOGGED`, `DEFECT-STATUS`, `RETEST`, `RISK-ACCEPTED`, `SESSION-STARTED`, `SESSION-ENDED`,
-`SESSION-SAFETY-STOP`, `CRAWL`.
+`SESSION-SAFETY-STOP`, `CRAWL`, `DOMAIN-DIRECT-EDIT` (approved direct edit after G0).
+`GATE` lines written by the gate-stale hook use actor `qa-guard`; re-affirmation is `GATE Gx reaffirmed`.
 
 | Timestamp | Event | Actor | Details |
 |---|---|---|---|

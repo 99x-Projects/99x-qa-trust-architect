@@ -149,3 +149,18 @@ exploratory:
     defaultMode: ask              # autonomous | guided | pair | ask
     mandatoryCharters: high-risk  # high-risk | all | none
   defectCreation: confirm         # always confirm — not configurable to auto
+
+# ─── Guard hooks (v2) ────────────────────────────────────────────────────
+# Enforced by hooks/qa_guard.py on every tool call; needs Python 3.8+. Active only where this file exists.
+guards:
+  enabled: true
+  secretScan:
+    mode: block                   # block | warn | off — secrets written into any file
+    envValues: true               # also block the literal values of secret-looking variables from the env file/shell
+    allow: []                     # literal strings or regexes to ignore (false positives)
+  secretFiles: { mode: block }    # block | warn | off — AI reading the env file / .auth/, printing secret variables
+  domainWrites: { mode: ask }     # ask | warn | block | off — direct domain edits after G0 outside a DCP apply window
+  gateStale:
+    mode: mark                    # mark (set `stale` in qa-state.md + audit) | warn | off
+    cover: {}                     # extra/replacement artifacts per gate, e.g. { G2: ["1-inception/test-plan.md"] }
+  browser: { mode: enforce }      # enforce | warn | off — Playwright origins, blocked actions, credential fields
