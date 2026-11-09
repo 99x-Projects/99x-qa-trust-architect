@@ -17,7 +17,11 @@ You ──/qa-start──► orchestrator (main session) ──► requirement-a
                           ├──► risk-gap-analyst ──► risk, gaps, test plan ──► /qa-gate G2
                           ├──► test-designer ─────► test cases, test data
                           ├──► automation-analyst ► automation gap ─────────► /qa-gate G3
-                          └──► sync-agent ────────► Azure DevOps (on gate approval)
+                          ├──► sync-agent ────────► Azure DevOps (on gate approval)
+                          ├──/qa-execute ─► you run tests ─► execution-analyst ─► runs, defect drafts
+                          ├──/qa-explore ─► exploratory-tester (browser) ─► session reports
+                          ├──/qa-defect ──► you confirm ─► sync-agent creates Bugs
+                          └──/qa-gate G4 ◄─ test summary report (GO / GO with risks / NO-GO)
          domain-analyst ── maintains the domain context used by all of the above
 ```
 
@@ -26,13 +30,13 @@ You ──/qa-start──► orchestrator (main session) ──► requirement-a
 | Command | What it does | When to use |
 |---|---|---|
 | `/qa-init [--rebaseline]` | Phase 0: workspace detection, config, domain discovery, QA reverse engineering, quality standards, prepares G0 | Once per project (or to re-baseline) |
-| `/qa-domain build \| refresh \| deepen <F-id> \| ask <question> \| review \| accept … \| reject …` | Build and maintain the domain context; ask questions about the app; govern DCPs | Any time; `review` before gates when DCPs are pending |
+| `/qa-domain build \| refresh \| deepen <F-id> \| crawl [--env] [--role] \| ask <question> \| review \| accept … \| reject …` | Build and maintain the domain context; crawl the running app per role (Playwright MCP) to map pages; ask questions about the app; govern DCPs | Any time; `review` before gates when DCPs are pending |
 | `/qa-start <id \| url \| aidlc-unit> [--tier …]` | Fetches the work item, converts it, picks the tier, runs stages 1.1–1.3 up to G1 | Start QA on a story/bug/feature |
 | `/qa-continue [id] [--tier …]` | Reads `qa-state.md`, processes your answers, runs the next stages up to the next gate | After answering questions or approving a gate |
-| `/qa-gate <G0…G5> [id]` | Builds the gate pack (checklist with evidence, open questions, pending DCPs), lets you interrogate it, records the decision, triggers sync | At each gate |
+| `/qa-gate <G0…G5> [id] [--reaffirm]` | Builds the gate pack (checklist with evidence, open questions, pending DCPs), lets you interrogate it, records the decision with artifact hashes, triggers sync. `--reaffirm` restores a gate that went `stale` after a trivial edit | At each gate; after a gate turns stale |
 | `/qa-status [id \| --project]` | Item: tier, stages, gates, open questions, AC coverage, sync state. Project: G0, domain version, pending DCPs, stale facts, AI-DLC status | "Where are we?" |
-| `/qa-sync [id] [--what ac\|tests\|gates\|all] [--check]` | Pushes artifacts to the platform on demand; `--check` reports drift | When `syncMode` isn't `on-gate`, or to re-push |
-| `/qa-execute [id] [--tc …] [--set planned\|regression\|retest] [--sheet \| --ingest] [--import <file>]` | Opens a test cycle (build + environment, entry criteria), runs test cases step by step in chat or via an offline execution sheet, imports JUnit/TRX results, records `RUN-xxx` files with evidence | Phase 3, after G3 |
+| `/qa-sync [id] [--what ac\|tests\|gates\|runs\|defects\|all] [--check]` | Pushes artifacts to the platform on demand (incl. test run results and confirmed defects); `--check` reports drift | When `syncMode` isn't `on-gate`, or to re-push |
+| `/qa-execute [id] [--tc …] [--set planned\|regression\|retest] [--sheet \| --ingest] [--import <file>] [--env <name>] [--build <ver>]` | Opens a test cycle (build + environment, entry criteria), runs test cases and observability checks (`OBS-xx`) step by step in chat or via an offline execution sheet, imports JUnit/TRX results, records `RUN-xxx` files with evidence | Phase 3, after G3 |
 | `/qa-defect [id] list \| confirm \| reject \| duplicate \| defer \| accept \| refresh \| retest` | Reviews drafted defects; **you confirm** before anything is created in ADO; refreshes bug states; retests fixes | Phase 3 |
 | `/qa-explore [id] charters \| run <CH-id> [--mode autonomous\|guided\|pair] \| retest <DEF> \| smoke \| report <SES>` | Plans charters from risks and gaps; runs browser sessions through Playwright MCP (AI explores alone, you steer, or you drive and the AI takes notes); re-verifies fixed bugs; turns findings into defect drafts, questions and domain updates | Phase 3, after G3 |
 
@@ -58,7 +62,10 @@ You ──/qa-start──► orchestrator (main session) ──► requirement-a
 - **Stages:** 1.4 risk & impact, 1.5 gap analysis, 1.6 test strategy & plan, 2.4 observability design.
 - **Does:** scores risk (impact × likelihood) and blast radius using the feature map,
   hotspots and code; finds requirement, coverage, automation, NFR, environment, domain and
-  observability gaps; produces a right-sized test plan per tier; designs what to log/measure.
+  observability gaps; produces a right-sized test plan per tier. For 2.4: inventories existing
+  instrumentation, proposes signals (`SIG-xx`, no PII, low-cardinality), alerts with a query sketch
+  in your monitoring stack, SLOs, safe production synthetics, instrumentation dev asks (`DA-xx`) and
+  pre-release verification checks (`OBS-xx`) that run in Phase 3.
 - **Output:** `risk-assessment.md`, `gap-analysis.md`, `test-plan.md`, `2-design/observability-plan.md`.
   **Gate:** G2 (and contributes to G3).
 
@@ -66,16 +73,23 @@ You ──/qa-start──► orchestrator (main session) ──► requirement-a
 - **Stages:** 2.1 test case design, 2.2 test data & environment.
 - **Does:** derives test cases from approved AC using equivalence partitioning, boundary
   values, decision tables, state transitions, pairwise, permission matrices and error guessing;
-  every case traces to an AC; marks cases based on provisional facts; defines data sets and
-  environment/account needs (by role reference, never secrets).
-- **Output:** `2-design/test-cases/*.yaml`, `test-case-index.md`, `test-data.md`. **Gate:** G3.
+  every case traces to an AC; marks cases based on provisional facts. For 2.2: maps every case to a
+  data set (`DS-xx`, shared or exclusive, relative dates), picks how to create it (your builders/seeds
+  first), privacy-classifies every field (synthetic only, secrets as `env:` references), lists
+  accounts by role, environment needs (flags, integration stubs, clock, email capture) and turns
+  anything not ready into an entry criterion with an owner.
+- **Output:** `2-design/test-cases/*.yaml`, `test-case-index.md`, `test-data.md`, `data-sets/DS-*.yaml`. **Gate:** G3.
 
 ### automation-analyst — *finds the automation gap*
 - **Stage:** 2.3 automation gap.
-- **Does:** recommends the right level per test case (unit / API / contract / UI / manual /
-  exploratory), scores automation value, maps to existing automated tests
-  (`feature-test-map.yaml`), identifies framework gaps, proposes an automation backlog.
-- **Output:** `2-design/automation-gap.md` (backlog items can become ADO tasks on sync). **Gate:** G3.
+- **Does:** pushes each test case to the lowest level that can observe the result (unit / API /
+  contract / UI / manual / exploratory); finds existing automated tests that already cover it or can
+  be extended — **only with file + assertion evidence**; scores value (frequency, risk, stability,
+  determinism minus effort → automate now / backlog / keep manual); lists blockers and testability dev
+  asks (`DA-xx`); finds framework and CI gaps; places each backlog item (`AB-xx`: framework, path,
+  pipeline stage, test name containing the `TC-xxx` id so results import automatically).
+- **Output:** `2-design/automation-gap.md`, the `automation` block of each test case (backlog items and
+  dev asks can become ADO work items at G3). **Gate:** G3.
 
 ### sync-agent — *the only one that writes to Azure DevOps*
 - **When:** after a gate is approved (`syncMode: on-gate`) or on `/qa-sync`.
@@ -113,6 +127,18 @@ You ──/qa-start──► orchestrator (main session) ──► requirement-a
 - **Never** creates defects — candidates go to the execution-analyst and you confirm.
 - **Output:** `3-execution/charters.md`, `3-execution/sessions/SES-xxx/` (report + evidence), app-map
   DCPs, questions. **Gate:** G4 (C6).
+
+## Guard hooks — always on in the background
+
+Not an agent, but they watch every agent and command (details: `hooks/README.md`):
+
+| Guard | What you'll notice |
+|---|---|
+| Secret scan | A write containing a token, password or the value of a secret from `.env` is blocked with the reason |
+| Secret files | The AI can't open or print `.env` / `.auth/` or dump environment variables |
+| Domain writes | After G0, a direct edit to a domain file asks you first (DCPs are the normal route) |
+| Browser | Production is refused; unknown sites and "delete / pay / send…" clicks ask you; password fields are never typed into |
+| Gate stale | Changing an artifact after its gate was approved marks the gate `stale` and tells you |
 
 ## Which agent runs at which stage
 

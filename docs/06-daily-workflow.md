@@ -58,6 +58,10 @@ risks. Ask anything ("show me AC-03's edge cases", "why is NFR-2 a gap?"). Decid
 On approval the sync agent shows a dry run, then writes the acceptance criteria to the story's
 *Acceptance Criteria* field and sets the tag `qa-gate:G1-approved`.
 
+If an artifact covered by an approved gate changes later, the gate is marked **stale**
+automatically and you are told. Trivial edit → `/qa-gate G1 1234 --reaffirm`; real change → run the
+gate again.
+
 ## 4. Plan — G2
 
 `/qa-continue 1234` → `risk-gap-analyst` writes `risk-assessment.md`, `gap-analysis.md`,
@@ -65,13 +69,22 @@ On approval the sync agent shows a dry run, then writes the acceptance criteria 
 
 ## 5. Design — G3
 
-`/qa-continue 1234` → `test-designer` writes `2-design/test-cases/TC-*.yaml` (Gherkin or rule
-table, each traced to an AC) and `test-data.md`; `automation-analyst` writes `automation-gap.md`;
-observability plan if relevant → `/qa-gate G3 1234`.
+`/qa-continue 1234` → the design stages run:
+
+| Stage | Artifact | Example content |
+|---|---|---|
+| 2.1 Test cases | `2-design/test-cases/TC-*.yaml` | `TC-004` boundary: 20 days accepted, 21 rejected (traces AC-03, BR-012) |
+| 2.2 Test data & env | `test-data.md`, `data-sets/DS-*.yaml` | `DS-02` employee with 18 days balance, start date *today + 7*, exclusive (TC mutates it); email capture needed → entry criterion, owner Dev lead |
+| 2.3 Automation gap | `automation-gap.md` | TC-004 → API level, value 14 → automate now as `AB-01` in `tests/Api/LeaveTests.cs`, test name `TC-004_rejects_21_days`, PR pipeline; TC-009 already covered by `LeaveValidatorTests.cs:42` |
+| 2.4 Observability | `observability-plan.md` | `SIG-01` metric `leave.request.rejected{reason}`; alert on a 3× spike; `OBS-01` check: submit 21 days → metric appears within 5 min, no PII |
+
+Standard tier runs 2.2 and 2.4 only when needed (non-initial state, several roles, integrations,
+time, flags; high risks needing production signals) → `/qa-gate G3 1234`.
 
 On approval: a requirement-based suite is created in your Test Plan and test cases are
 created/updated with steps and linked to the story (*Tested By*). IDs are written back into
-the YAML files so re-syncing updates instead of duplicating.
+the YAML files so re-syncing updates instead of duplicating. Optionally, automation backlog items
+(`AB-xx`) and dev asks (`DA-xx`) are created as tagged work items.
 
 ## 6. Execute — Phase 3
 
@@ -80,7 +93,7 @@ the YAML files so re-syncing updates instead of duplicating.
 ```
 
 - Tell it the **build** and **environment**; it checks the test plan's entry criteria and lists the
-  manual test cases to run (highest priority first).
+  manual test cases to run (highest priority first), plus the observability checks `OBS-xx`.
 - **In chat:** it shows one test case at a time — steps, expected results, data, and which test
   account role to use (e.g. "the account in `TEST_EMPLOYEE_USER`" — it never shows passwords).
   You answer `all pass`, `step 3 fail: saved without a warning`, `blocked: env down`, and give an
@@ -154,3 +167,5 @@ the story.
   Review them with `/qa-domain review` before G3.
 - **Repo-only mode** (`storage.platform.enabled: false`) is a good way to trial the flow
   without writing anything to ADO.
+- **Guard hooks** run in the background: a blocked write or a "qa-guard" prompt explains why
+  (secret in a file, direct domain edit, production URL, destructive click). See `hooks/README.md`.

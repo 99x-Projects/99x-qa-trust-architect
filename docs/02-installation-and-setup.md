@@ -115,6 +115,16 @@ example is `config/qa-trust.config.example.yaml`; the schema is
 | `routing.rules` | bugs → light, epics/payments/PII → comprehensive | Your own tier rules |
 | `domain.discovery.mode` | `auto` | Force `docs-led` or `evidence-led` |
 | `domain.owners` | any tester | e.g. `{ business-rules: ["product-owner"] }` |
+| `domain.discovery.sources.liveApp` | `false` | `true` to crawl the running app per role during `/qa-init` |
+| `execution.defaultEnvironment` | `test` | Your usual test environment |
+| `execution.manualMode` | `ask` | `interactive` (in chat) or `sheet` (offline file) |
+| `execution.publishRuns` | `on-gate` (G4) | `after-session` or `manual` |
+| `execution.defects.requireReproduction` | `false` | `true` to reproduce every failure once before confirming |
+| `execution.results.paths` | TRX / JUnit globs | Where your pipeline writes result files |
+| `exploratory.environments.allowed` | `dev, test, staging` | Environments the browser may use (also needs `agentsAllowed: true`) |
+| `exploratory.allowedOrigins` | none | Extra sites such as your SSO login page |
+| `exploratory.auth.strategy` | `manual` | `storage-state` with recorded logins per role |
+| `exploratory.guards.blockActions` | delete, pay, send email… | Your own list of risky actions |
 | `guards.*.mode` | secret scan/files block, domain writes ask, gate stale mark, browser enforce | `warn` or `off` per guard; `guards.secretScan.allow` for false positives — see [`hooks/README.md`](../hooks/README.md) |
 
 ## Troubleshooting

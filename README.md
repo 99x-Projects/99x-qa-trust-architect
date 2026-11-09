@@ -33,9 +33,9 @@ PHASE 4  OPERATIONS  4.1 Release verification · 4.2 Observability validation ·
 | `/qa-domain build\|refresh\|crawl\|ask\|review\|accept\|reject` | Build and maintain the domain context; review Domain Change Proposals (DCPs) |
 | `/qa-start <work-item-id>` | Intake a work item, choose tier, start Phase 1 |
 | `/qa-continue [work-item-id]` | Resume from `qa-state.md` |
-| `/qa-gate <G0..G5> [work-item-id]` | Read → analyse → decide → record a gate |
+| `/qa-gate <G0..G5> [work-item-id] [--reaffirm]` | Read → analyse → decide → record a gate; re-affirm a gate that went stale |
 | `/qa-status [work-item-id]` | State, gates, coverage, pending DCPs, stale domain areas |
-| `/qa-sync [work-item-id]` | Push/pull artifacts with the work item platform |
+| `/qa-sync [work-item-id] [--what …\|runs\|defects]` | Push artifacts, test runs and confirmed defects to the work item platform |
 | `/qa-execute [id] [--sheet\|--ingest\|--import <file>]` | Phase 3: run test cases (in chat or offline sheet), import JUnit/TRX results, record runs |
 | `/qa-defect [id] list\|confirm\|retest\|refresh…` | Review drafted defects; create confirmed ones in ADO; retest fixes |
 | `/qa-explore [id] charters\|run <CH>\|retest <DEF>\|smoke` | Exploratory, focused and re-verification sessions in the browser via Playwright MCP (autonomous, guided or pair) |

@@ -68,6 +68,10 @@ How it works:
 3. Uncertain or high-impact facts become a **targeted interview** in `questions.md` — at most
    ~20 questions, highest impact first, multiple choice with a suggested answer. Answering
    turns facts into `confirmed`.
+4. **Optional live crawl** (`sources.liveApp: true`, or `/qa-domain crawl` any time): the AI
+   browses the running test environment per role through Playwright MCP — read-only, you log in —
+   and maps pages, navigation and what each role can see. Results arrive as DCPs; permissions seen
+   this way are recorded as *observed*, never confirmed.
 
 > **Important:** code tells you what the system *does*, not what it *should* do.
 > Observed/inferred facts can guide testing, but only **confirmed** (or verified documented)
@@ -104,13 +108,15 @@ After G0 the domain context only changes through **Domain Change Proposals (DCPs
 |---|---|
 | `/qa-domain refresh` | Re-scan for changes (code, docs, AI-DLC) and staleness; raise DCPs |
 | `/qa-domain deepen F-<id>` | Deepen one feature now instead of waiting for a work item |
+| `/qa-domain crawl [--env test] [--role all]` | Re-map pages per role from the running app (new screens → DCPs) |
 | `/qa-domain review` | Walk through pending DCPs |
 | `/qa-domain accept <ids \| all-auto \| all>` / `reject <id> <reason>` | Decide |
 
 Review level per DCP is set by `domain.proposals`: *auto* (e.g. page lists, code links),
 *review* (glossary, journeys…), *critical* (business rules, permissions, states — may require a
 named owner via `domain.owners`). Accepting bumps the domain version and flags artifacts that
-relied on the changed facts.
+relied on the changed facts. A direct edit to a domain file after G0 triggers a guard prompt —
+accepting a DCP opens a short apply window so the normal route is never interrupted.
 
 ## Practical adoption plan
 
