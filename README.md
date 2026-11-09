@@ -1,6 +1,6 @@
 # QA Trust Architect
 
-A gated, AI-assisted **QA lifecycle** for Claude Code, inspired by AWS AI-DLC.
+A gated, AI-assisted **QA lifecycle** for Claude Code.
 The AI drafts every QA artifact and asks the questions it cannot answer; humans
 answer, review and approve at defined **gates**. Everything is persisted as files
 in the repo (state + audit), and optionally synced to your work item platform.
